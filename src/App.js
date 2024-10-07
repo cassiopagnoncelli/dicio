@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css'; // Import the CSS file
 import dict from './words';
 
@@ -43,7 +43,37 @@ function App() {
     setUnusedCounter(0); // Reset the unused counter
   };
 
-  const handleAnswer = (answer) => {
+  // Memoize the evaluateScores function using useCallback
+  const evaluateScores = useCallback((score) => {
+    if (phase === 1) {
+      if (score < 6) {
+        if (level === 1) {
+          setIsFinished(true); // End test if fewer than 6 passives on level 1
+        } else {
+          setLevel(level - 1);
+          setPhase(2); // Move to the refinement phase
+          resetScores();
+        }
+      } else if (score >= 6 && score <= 17) {
+        setFinalLevel(level); // Determine the test-taker's final level
+        setPhase(2); // Move to phase 2 (refinement phase)
+        resetScores();
+      } else if (score >= 18) {
+        if (level === 4) {
+          setFinalLevel(level);
+          setPhase(2);
+          resetScores();
+        } else {
+          setLevel(level + 1); // Go to the next level if they score 18 or more
+          resetScores();
+        }
+      }
+    } else if (phase === 2) {
+      setIsFinished(true); // End the test after the second phase
+    }
+  }, [level, phase]);
+
+  const handleAnswer = useCallback((answer) => {
     if (isFinished) return; // Do nothing if the test is finished
 
     let newPassiveScore = passiveScore;
@@ -76,36 +106,7 @@ function App() {
         setIsFinished(true); // End the test after 36 questions or all unused words are done
       }
     }
-  };
-
-  const evaluateScores = (score) => {
-    if (phase === 1) {
-      if (score < 6) {
-        if (level === 1) {
-          setIsFinished(true); // End test if fewer than 6 passives on level 1
-        } else {
-          setLevel(level - 1);
-          setPhase(2); // Move to the refinement phase
-          resetScores();
-        }
-      } else if (score >= 6 && score <= 17) {
-        setFinalLevel(level); // Determine the test-taker's final level
-        setPhase(2); // Move to phase 2 (refinement phase)
-        resetScores();
-      } else if (score >= 18) {
-        if (level === 4) {
-          setFinalLevel(level);
-          setPhase(2);
-          resetScores();
-        } else {
-          setLevel(level + 1); // Go to the next level if they score 18 or more
-          resetScores();
-        }
-      }
-    } else if (phase === 2) {
-      setIsFinished(true); // End the test after the second phase
-    }
-  };
+  }, [isFinished, passiveScore, activeScore, answers, currentQuestion, phase, unusedCounter, questionPool.length, unusedWords.length, evaluateScores]);
 
   // Calculate vocabulary estimate based on level and score
   const calculateVocabularyEstimate = (level, score) => {
@@ -176,7 +177,7 @@ function App() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [currentQuestion, questionPool, unusedCounter, answers, passiveScore, activeScore, isFinished]);
+  }, [handleAnswer, isFinished]);
 
   return (
     <div className="container">
