@@ -113,6 +113,21 @@ function App() {
     return min + (score / 36) * (max - min);
   };
 
+  // Calculate 95% confidence interval for vocabulary estimate
+  const calculateConfidenceInterval = (level, score) => {
+    const { min, max } = wordRanges[level];
+    const p = score / 36;
+    const n = 36;
+    const standardError = Math.sqrt((p * (1 - p)) / n);
+    const lowerBoundProportion = p - 1.96 * standardError;
+    const upperBoundProportion = p + 1.96 * standardError;
+
+    const lowerBound = lowerBoundProportion * (max - min) + min;
+    const upperBound = upperBoundProportion * (max - min) + min;
+
+    return { lowerBound, upperBound };
+  };
+
   const handleBack = () => {
     if (currentQuestion > 0 && !isFinished) {
       const previousAnswer = answers[currentQuestion - 1];
@@ -188,14 +203,22 @@ function App() {
 
       {isFinished ? (
         <div>
-          <h2>Você terminou o teste!</h2>
-          <p>Pontuação Passiva (C ou D): {passiveScore} pontos</p>
-          <p>Pontuação Ativa (D): {activeScore} pontos</p>
           {finalLevel !== null && (
-            <p>Seu nível determinado é: <strong>{levelLabels[finalLevel - 1]}</strong></p>
-          )}
-          {finalLevel !== null && (
-            <p>Você conhece aproximadamente: <strong>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore))}</strong> palavras.</p>
+            <div>
+              <h3>{levelLabels[finalLevel - 1]}</h3>
+              <h1>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')} palavras</h1>
+              <div style={{ textAlign: 'left', listStyleType: 'none', marginTop: '30px' }}>
+                {/* Vocabulário passivo */}
+                <p>
+                  Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')}</strong> no vocabulário passivo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
+                </p>
+
+                {/* Vocabulário ativo */}
+                <p>
+                  Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, activeScore)).toLocaleString('pt-BR')}</strong> no vocabulário ativo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
+                </p>
+              </div>
+            </div>
           )}
         </div>
       ) : (
