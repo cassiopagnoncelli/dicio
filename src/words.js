@@ -1,4 +1,4 @@
-export const level_1 = [
+const level_1 = [
   "Abacaxi",
   "Abelha",
   "Abrir",
@@ -105,7 +105,7 @@ export const level_1 = [
   "Viajar"
 ];
 
-export const level_2 = [
+const level_2 = [
   "Absurdo",
   "Acesso",
   "Adaptação",
@@ -260,7 +260,7 @@ export const level_2 = [
   "Vulnerável"
 ];
 
-export const level_3 = [
+const level_3 = [
   "Abominável",
   "Abstruso",
   "Abundante",
@@ -331,6 +331,7 @@ export const level_3 = [
   "Fulminante",
   "Histeria",
   "Hostil",
+  "Idiossincrático",
   "Ilusório",
   "Imaculável",
   "Impecável",
@@ -436,7 +437,7 @@ export const level_3 = [
   "Vulgarizar"
 ];
 
-export const level_4 = [
+const level_4 = [
   "Abscôndito",
   "Acerbo",
   "Acreção",
@@ -720,8 +721,10 @@ export const level_4 = [
   "Vetorial",
   "Vicariante",
   "Xenobiótico",
-  "Zeste",
   "Zeugma",
   "Zoonose"
 ];
 
+const levels = [level_1, level_2, level_3, level_4];
+
+export default levels;
