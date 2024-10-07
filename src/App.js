@@ -16,8 +16,15 @@ function App() {
   const [unusedCounter, setUnusedCounter] = useState(0); // Counter for unused words
   const [finalLevel, setFinalLevel] = useState(null); // Stores the final determined level
 
-  // Mapping the levels to their labels
   const levelLabels = ["Nível básico", "Nível intermediário", "Nível fluente", "Nível provecto"];
+  
+  // Define the word ranges for each level
+  const wordRanges = {
+    1: { min: 0, max: 3000 },
+    2: { min: 3000, max: 18000 },
+    3: { min: 18000, max: 32000 },
+    4: { min: 32000, max: 60000 },
+  };
 
   useEffect(() => {
     if (level < 4) {
@@ -53,11 +60,9 @@ function App() {
     setPassiveScore(newPassiveScore);
     setActiveScore(newActiveScore);
 
-    // Advance to the next question using the unusedCounter for refinement
     const nextQuestion = currentQuestion + 1;
     const nextUnusedCounter = unusedCounter + 1;
 
-    // Check if it's the last question in phase 1 or 2 and transition accordingly
     if (phase === 1) {
       if (nextQuestion < questionPool.length) {
         setCurrentQuestion(nextQuestion); // Move to next question in phase 1
@@ -65,10 +70,10 @@ function App() {
         evaluateScores(newPassiveScore); // Evaluate and transition to phase 2 or finish
       }
     } else if (phase === 2) {
-      if (nextUnusedCounter < unusedWords.length) {
+      if (nextUnusedCounter < unusedWords.length && nextUnusedCounter < 36) { // Limit to 36 questions in phase 2
         setUnusedCounter(nextUnusedCounter); // Move to next question in unused words
       } else {
-        setIsFinished(true); // End the test after all unused words are done
+        setIsFinished(true); // End the test after 36 questions or all unused words are done
       }
     }
   };
@@ -100,6 +105,12 @@ function App() {
     } else if (phase === 2) {
       setIsFinished(true); // End the test after the second phase
     }
+  };
+
+  // Calculate vocabulary estimate based on level and score
+  const calculateVocabularyEstimate = (level, score) => {
+    const { min, max } = wordRanges[level];
+    return min + (score / 36) * (max - min);
   };
 
   const handleBack = () => {
@@ -154,10 +165,8 @@ function App() {
 
   return (
     <div className="container">
-      {/* Show header only if the test is not finished */}
       {!isFinished && (
         <div className="header-bar">
-          {/* Show back button only if the current question is greater than 0 */}
           {currentQuestion > 0 && (
             <div className="back-button-container">
               <button className="back-button" onClick={handleBack}>
@@ -169,11 +178,10 @@ function App() {
             </div>
           )}
           <div className="center-text">
-            {/* Check if it's the refinement phase and display the correct label */}
             {phase === 1 ? levelLabels[level - 1] : `Refinamento ${levelLabels[level - 1]}`}
           </div>
           <div className="right-text">
-            {phase === 1 ? currentQuestion + 1 : unusedCounter + 1} / {phase === 1 ? questionPool.length : unusedWords.length}
+            {phase === 1 ? currentQuestion + 1 : unusedCounter + 1} / {phase === 1 ? questionPool.length : Math.min(36, unusedWords.length)}
           </div>
         </div>
       )}
@@ -185,6 +193,9 @@ function App() {
           <p>Pontuação Ativa (D): {activeScore} pontos</p>
           {finalLevel !== null && (
             <p>Seu nível determinado é: <strong>{levelLabels[finalLevel - 1]}</strong></p>
+          )}
+          {finalLevel !== null && (
+            <p>Você conhece aproximadamente: <strong>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore))}</strong> palavras.</p>
           )}
         </div>
       ) : (
@@ -201,7 +212,6 @@ function App() {
           </footer>
         </div>
       )}
-
     </div>
   );
 }
