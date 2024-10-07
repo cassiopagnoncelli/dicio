@@ -22,8 +22,8 @@ function App() {
   const wordRanges = {
     1: { min: 0, max: 3000 },
     2: { min: 3000, max: 18000 },
-    3: { min: 18000, max: 32000 },
-    4: { min: 32000, max: 60000 },
+    3: { min: 18000, max: 30000 },
+    4: { min: 30000, max: 48000 },
   };
 
   useEffect(() => {
