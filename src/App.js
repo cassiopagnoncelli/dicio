@@ -12,6 +12,8 @@ function App() {
   const [level, setLevel] = useState(1); // Start at level 1 (use 0-based index if needed)
   const [phase, setPhase] = useState(1); // Phase 1: Finding level; Phase 2: Refinement phase
   const [questionPool, setQuestionPool] = useState([]);
+  const [unusedWords, setUnusedWords] = useState([]); // Separate list for unused words
+  const [unusedCounter, setUnusedCounter] = useState(0); // Counter for unused words
   const [finalLevel, setFinalLevel] = useState(null); // Stores the final determined level
 
   // Mapping the levels to their labels
@@ -20,12 +22,9 @@ function App() {
   useEffect(() => {
     if (level < 4) {
       const wordPoolSize = phase === 1 ? 24 : 48; // Phase 1: 24 words, Phase 2: 48 words
-      setQuestionPool(
-        dict[level - 1] // Adjust to 0-based index for level
-          .filter((word) => !usedWords.includes(word))
-          .sort(() => 0.5 - Math.random())
-          .slice(0, wordPoolSize)
-      );
+      const filteredWords = dict[level - 1].filter((word) => !usedWords.includes(word));
+      setQuestionPool(filteredWords.slice(0, wordPoolSize)); // Set the question pool for the phase
+      setUnusedWords(filteredWords); // Keep a separate list for unused words
     }
   }, [level, phase, usedWords]);
 
@@ -34,6 +33,7 @@ function App() {
     setActiveScore(0);
     setCurrentQuestion(0);
     setAnswers([]);
+    setUnusedCounter(0); // Reset the unused counter
   };
 
   const handleAnswer = (answer) => {
@@ -52,13 +52,24 @@ function App() {
     setAnswers([...answers, answer]);
     setPassiveScore(newPassiveScore);
     setActiveScore(newActiveScore);
-    setUsedWords([...usedWords, questionPool[currentQuestion]]);
 
+    // Advance to the next question using the unusedCounter for refinement
     const nextQuestion = currentQuestion + 1;
-    if (nextQuestion < questionPool.length) {
-      setCurrentQuestion(nextQuestion);
-    } else {
-      evaluateScores(newPassiveScore);
+    const nextUnusedCounter = unusedCounter + 1;
+
+    // Check if it's the last question in phase 1 or 2 and transition accordingly
+    if (phase === 1) {
+      if (nextQuestion < questionPool.length) {
+        setCurrentQuestion(nextQuestion); // Move to next question in phase 1
+      } else {
+        evaluateScores(newPassiveScore); // Evaluate and transition to phase 2 or finish
+      }
+    } else if (phase === 2) {
+      if (nextUnusedCounter < unusedWords.length) {
+        setUnusedCounter(nextUnusedCounter); // Move to next question in unused words
+      } else {
+        setIsFinished(true); // End the test after all unused words are done
+      }
     }
   };
 
@@ -139,7 +150,7 @@ function App() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [currentQuestion, questionPool, answers, passiveScore, activeScore, isFinished]);
+  }, [currentQuestion, questionPool, unusedCounter, answers, passiveScore, activeScore, isFinished]);
 
   return (
     <div className="container">
@@ -162,7 +173,7 @@ function App() {
             {phase === 1 ? levelLabels[level - 1] : `Refinamento ${levelLabels[level - 1]}`}
           </div>
           <div className="right-text">
-            {currentQuestion + 1} / {questionPool.length}
+            {phase === 1 ? currentQuestion + 1 : unusedCounter + 1} / {phase === 1 ? questionPool.length : unusedWords.length}
           </div>
         </div>
       )}
@@ -178,7 +189,7 @@ function App() {
         </div>
       ) : (
         <div>
-          <p>Escolha uma opção para a palavra: <strong>{questionPool[currentQuestion]}</strong></p>
+          <p>Escolha uma opção para a palavra: <strong>{phase === 1 ? questionPool[currentQuestion] : unusedWords[unusedCounter]}</strong></p>
 
           <button className="option-a" onClick={() => handleAnswer('A')}>Desconheço</button>
           <button className="option-b" onClick={() => handleAnswer('B')}>Tenho vaga ideia</button>
