@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './App.css'; // Import the CSS file
 import dict from './words';
 
 function App() {
@@ -8,16 +9,19 @@ function App() {
   const [isFinished, setIsFinished] = useState(false);
   const [answers, setAnswers] = useState([]);
   const [usedWords, setUsedWords] = useState([]);
-  const [level, setLevel] = useState(0); // Current dictionary level (0 to 3)
-  const [phase, setPhase] = useState(1); // Phase 1: Finding level; Phase 2: Final level test
+  const [level, setLevel] = useState(1); // Start at level 1 (use 0-based index if needed)
+  const [phase, setPhase] = useState(1); // Phase 1: Finding level; Phase 2: Refinement phase
   const [questionPool, setQuestionPool] = useState([]);
   const [finalLevel, setFinalLevel] = useState(null); // Stores the final determined level
+
+  // Mapping the levels to their labels
+  const levelLabels = ["Nível básico", "Nível intermediário", "Nível fluente", "Nível provecto"];
 
   useEffect(() => {
     if (level < 4) {
       const wordPoolSize = phase === 1 ? 24 : 48; // Phase 1: 24 words, Phase 2: 48 words
       setQuestionPool(
-        dict[level]
+        dict[level - 1] // Adjust to 0-based index for level
           .filter((word) => !usedWords.includes(word))
           .sort(() => 0.5 - Math.random())
           .slice(0, wordPoolSize)
@@ -61,23 +65,21 @@ function App() {
   const evaluateScores = (score) => {
     if (phase === 1) {
       if (score < 6) {
-        if (level === 0) {
-          setIsFinished(true); // End test if fewer than 6 passives on level 0
+        if (level === 1) {
+          setIsFinished(true); // End test if fewer than 6 passives on level 1
         } else {
-          // If on level N (2, 3 or 4), go to N-1 with 48 questions
           setLevel(level - 1);
-          setPhase(2);
+          setPhase(2); // Move to the refinement phase
           resetScores();
         }
       } else if (score >= 6 && score <= 17) {
         setFinalLevel(level); // Determine the test-taker's final level
-        setPhase(2); // Move to phase 2 (final test at the determined level)
+        setPhase(2); // Move to phase 2 (refinement phase)
         resetScores();
       } else if (score >= 18) {
-        if (level === 3) {
-          // If we're in level 4, even if score >= 18, go to refinement phase
-          setFinalLevel(level); // Keep the user in the final level
-          setPhase(2); // Move to phase 2 (refinement test at level 4)
+        if (level === 4) {
+          setFinalLevel(level);
+          setPhase(2);
           resetScores();
         } else {
           setLevel(level + 1); // Go to the next level if they score 18 or more
@@ -140,8 +142,30 @@ function App() {
   }, [currentQuestion, questionPool, answers, passiveScore, activeScore, isFinished]);
 
   return (
-    <div>
-      <h1>Questionário de Palavras</h1>
+    <div className="container">
+      {/* Show header only if the test is not finished */}
+      {!isFinished && (
+        <div className="header-bar">
+          {/* Show back button only if the current question is greater than 0 */}
+          {currentQuestion > 0 && (
+            <div className="back-button-container">
+              <button className="back-button" onClick={handleBack}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-left">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+              </button>
+            </div>
+          )}
+          <div className="center-text">
+            {/* Check if it's the refinement phase and display the correct label */}
+            {phase === 1 ? levelLabels[level - 1] : `Refinamento ${levelLabels[level - 1]}`}
+          </div>
+          <div className="right-text">
+            {currentQuestion + 1} / {questionPool.length}
+          </div>
+        </div>
+      )}
 
       {isFinished ? (
         <div>
@@ -149,24 +173,24 @@ function App() {
           <p>Pontuação Passiva (C ou D): {passiveScore} pontos</p>
           <p>Pontuação Ativa (D): {activeScore} pontos</p>
           {finalLevel !== null && (
-            <p>Seu nível determinado é: {finalLevel + 1}</p>
+            <p>Seu nível determinado é: <strong>{levelLabels[finalLevel - 1]}</strong></p>
           )}
         </div>
       ) : (
         <div>
-          <h2>Pergunta {currentQuestion + 1} de {questionPool.length}</h2>
           <p>Escolha uma opção para a palavra: <strong>{questionPool[currentQuestion]}</strong></p>
 
-          <button onClick={() => handleAnswer('A')}>A</button>
-          <button onClick={() => handleAnswer('B')}>B</button>
-          <button onClick={() => handleAnswer('C')}>C</button>
-          <button onClick={() => handleAnswer('D')}>D</button>
+          <button className="option-a" onClick={() => handleAnswer('A')}>Desconheço</button>
+          <button className="option-b" onClick={() => handleAnswer('B')}>Tenho vaga ideia</button>
+          <button className="option-c" onClick={() => handleAnswer('C')}>Reconheço mas nunca usei</button>
+          <button className="option-d" onClick={() => handleAnswer('D')}>Conheço e sei empregar</button>
 
-          {currentQuestion > 0 && (
-            <button onClick={handleBack}>Voltar</button>
-          )}
+          <footer>
+            <p>Use as teclas 1, 2, 3, 4 para escolher rapidamente entre as opções.</p>
+          </footer>
         </div>
       )}
+
     </div>
   );
 }
