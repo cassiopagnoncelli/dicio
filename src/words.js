@@ -448,7 +448,6 @@ const level_4 = [
   "Amálgama",
   "Amígdala",
   "Anacoluto",
-  "Anacoluto",
   "Anátema",
   "Anquilose",
   "Antítese",
