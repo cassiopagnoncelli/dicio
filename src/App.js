@@ -180,62 +180,72 @@ function App() {
   }, [handleAnswer, isFinished]);
 
   return (
-    <div className="container">
-      {!isFinished && (
-        <div className="header-bar">
-          {currentQuestion > 0 && (
-            <div className="back-button-container">
-              <button className="back-button" onClick={handleBack}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-left">
-                  <line x1="19" y1="12" x2="5" y2="12"></line>
-                  <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
-              </button>
-            </div>
-          )}
-          <div className="center-text">
-            {phase === 1 ? levelLabels[level - 1] : `Refinamento ${levelLabels[level - 1]}`}
-          </div>
-          <div className="right-text">
-            {phase === 1 ? currentQuestion + 1 : unusedCounter + 1} / {phase === 1 ? questionPool.length : Math.min(36, unusedWords.length)}
-          </div>
-        </div>
-      )}
-
-      {isFinished ? (
-        <div>
-          {finalLevel !== null && (
-            <div>
-              <h3>{levelLabels[finalLevel - 1]}</h3>
-              <h1>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')} palavras</h1>
-              <div style={{ textAlign: 'left', listStyleType: 'none', marginTop: '30px' }}>
-                {/* Vocabulário passivo */}
-                <p>
-                  Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')}</strong> no vocabulário passivo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
-                </p>
-
-                {/* Vocabulário ativo */}
-                <p>
-                  Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, activeScore)).toLocaleString('pt-BR')}</strong> no vocabulário ativo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
-                </p>
+    <div>
+      <div className="container">
+        {!isFinished && (
+          <div className="header-bar">
+            {currentQuestion > 0 && (
+              <div className="back-button-container">
+                <button className="back-button" onClick={handleBack}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-left">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                  </svg>
+                </button>
               </div>
+            )}
+            <div className="center-text">
+              {phase === 1 ? levelLabels[level - 1] : `Refinamento ${levelLabels[level - 1]}`}
             </div>
-          )}
-        </div>
-      ) : (
-        <div>
-          <p>Escolha uma opção para a palavra: <strong>{phase === 1 ? questionPool[currentQuestion] : unusedWords[unusedCounter]}</strong></p>
+            <div className="right-text">
+              {phase === 1 ? currentQuestion + 1 : unusedCounter + 1} / {phase === 1 ? questionPool.length : Math.min(36, unusedWords.length)}
+            </div>
+          </div>
+        )}
 
-          <button className="option-a" onClick={() => handleAnswer('A')}>Desconheço</button>
-          <button className="option-b" onClick={() => handleAnswer('B')}>Tenho vaga ideia</button>
-          <button className="option-c" onClick={() => handleAnswer('C')}>Reconheço mas nunca usei</button>
-          <button className="option-d" onClick={() => handleAnswer('D')}>Conheço e sei empregar</button>
+        {isFinished ? (
+          <div>
+            {finalLevel !== null && (
+              <div>
+                <h3>{levelLabels[finalLevel - 1]}</h3>
+                <h1>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')} palavras</h1>
+                <div style={{ textAlign: 'left', listStyleType: 'none', marginTop: '30px' }}>
+                  {/* Vocabulário passivo */}
+                  <p>
+                    Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')}</strong> no vocabulário passivo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
+                  </p>
 
-          <footer>
-            <p>Use as teclas 1, 2, 3, 4 para escolher rapidamente entre as opções.</p>
-          </footer>
-        </div>
-      )}
+                  {/* Vocabulário ativo */}
+                  <p>
+                    Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, activeScore)).toLocaleString('pt-BR')}</strong> no vocabulário ativo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div>
+            <p>Escolha uma opção para a palavra: <strong>{phase === 1 ? questionPool[currentQuestion] : unusedWords[unusedCounter]}</strong></p>
+
+            <button className="option-a" onClick={() => handleAnswer('A')}>Desconheço</button>
+            <button className="option-b" onClick={() => handleAnswer('B')}>Tenho vaga ideia</button>
+            <button className="option-c" onClick={() => handleAnswer('C')}>Reconheço mas nunca usei</button>
+            <button className="option-d" onClick={() => handleAnswer('D')}>Conheço e sei empregar</button>
+
+            <footer>
+              <p>Use as teclas 1, 2, 3, 4 para escolher rapidamente entre as opções.</p>
+            </footer>
+          </div>
+        )}
+      </div>
+      <footer>
+        Código-fonte disponível em
+        <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.207 11.387.6.112.793-.262.793-.583 0-.288-.01-1.05-.015-2.06-3.338.727-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.09-.746.083-.73.083-.73 1.204.084 1.837 1.237 1.837 1.237 1.07 1.834 2.809 1.305 3.495.997.108-.774.418-1.305.76-1.605-2.666-.305-5.467-1.333-5.467-5.93 0-1.31.47-2.38 1.237-3.22-.125-.304-.537-1.527.117-3.176 0 0 1.01-.324 3.3 1.23a11.48 11.48 0 0 1 3.006-.404 11.5 11.5 0 0 1 3.006.404c2.29-1.554 3.3-1.23 3.3-1.23.655 1.65.243 2.873.118 3.176.77.84 1.237 1.91 1.237 3.22 0 4.61-2.803 5.624-5.474 5.922.43.372.81 1.102.81 2.222 0 1.606-.014 2.898-.014 3.293 0 .324.193.698.8.58C20.565 21.797 24 17.298 24 12 24 5.37 18.63 0 12 0z"/>
+          </svg> Cássio Pagnoncelli
+        </a>
+      </footer>
     </div>
   );
 }
