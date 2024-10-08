@@ -238,7 +238,7 @@ function App() {
           </div>
         ) : (
           <div>
-            <p>Escolha uma opção para a palavra: <strong>{phase === 1 ? questionPool[currentQuestion] : unusedWords[unusedCounter]}</strong></p>
+            <p class="word"><strong>{phase === 1 ? questionPool[currentQuestion] : unusedWords[unusedCounter]}</strong></p>
 
             <button className="option-a" onClick={() => handleAnswer('A')}>Desconheço</button>
             <button className="option-b" onClick={() => handleAnswer('B')}>Tenho vaga ideia</button>
