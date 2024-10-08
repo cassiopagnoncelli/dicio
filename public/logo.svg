@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none">
+  <!-- Book cover -->
+  <rect x="150" y="100" width="724" height="824" rx="50" fill="#E0E0E0" stroke="#4F4F4F" stroke-width="8"/>
+  
+  <!-- Spine of the book -->
+  <rect x="150" y="100" width="100" height="824" fill="#B0BEC5"/>
+  
+  <!-- The letter 'A' on the book cover -->
+  <text x="360" y="600" font-family="Arial, sans-serif" font-size="400" fill="#455A64">A</text>
+  
+  <!-- Book pages lines -->
+  <line x1="250" y1="150" x2="850" y2="150" stroke="#B0BEC5" stroke-width="4"/>
+  <line x1="250" y1="250" x2="850" y2="250" stroke="#B0BEC5" stroke-width="4"/>
+  <line x1="250" y1="350" x2="850" y2="350" stroke="#B0BEC5" stroke-width="4"/>
+  <line x1="250" y1="450" x2="850" y2="450" stroke="#B0BEC5" stroke-width="4"/>
+  <line x1="250" y1="550" x2="850" y2="550" stroke="#B0BEC5" stroke-width="4"/>
+  <line x1="250" y1="650" x2="850" y2="650" stroke="#B0BEC5" stroke-width="4"/>
+  <line x1="250" y1="750" x2="850" y2="750" stroke="#B0BEC5" stroke-width="4"/>
+  
+  <!-- Bottom shadow -->
+  <rect x="150" y="900" width="724" height="24" fill="#B0BEC5"/>
+</svg>

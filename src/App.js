@@ -27,7 +27,7 @@ function App() {
   };
 
   useEffect(() => {
-    if (level < 4) {
+    if (level <= 4) {
       const wordPoolSize = phase === 1 ? 24 : 48; // Phase 1: 24 words, Phase 2: 48 words
       const filteredWords = dict[level - 1].filter((word) => !usedWords.includes(word));
       setQuestionPool(filteredWords.slice(0, wordPoolSize)); // Set the question pool for the phase
@@ -64,7 +64,7 @@ function App() {
           setPhase(2);
           resetScores();
         } else {
-          setLevel(level + 1); // Go to the next level if they score 18 or more
+          setLevel(level + 1);
           resetScores();
         }
       }
