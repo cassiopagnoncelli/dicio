@@ -2,6 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './App.css'; // Import the CSS file
 import dict from './words';
 
+// Fisher-Yates Shuffle
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+  return array;
+}
+
 function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [passiveScore, setPassiveScore] = useState(0);
@@ -30,8 +39,12 @@ function App() {
     if (level <= 4) {
       const wordPoolSize = phase === 1 ? 24 : 48; // Phase 1: 24 words, Phase 2: 48 words
       const filteredWords = dict[level - 1].filter((word) => !usedWords.includes(word));
-      setQuestionPool(filteredWords.slice(0, wordPoolSize)); // Set the question pool for the phase
-      setUnusedWords(filteredWords); // Keep a separate list for unused words
+
+      // Embaralhar as palavras antes de cortar para o tamanho do pool
+      const shuffledWords = shuffleArray(filteredWords);
+
+      setQuestionPool(shuffledWords.slice(0, wordPoolSize)); // Set the question pool for the phase
+      setUnusedWords(shuffledWords); // Keep a separate list for unused words
     }
   }, [level, phase, usedWords]);
 
