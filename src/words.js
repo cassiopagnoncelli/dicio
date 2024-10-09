@@ -719,6 +719,7 @@ const level_4 = [
   "Sinédoque",
   "Sinergia",
   "Sofismar",
+  "Solfejo",
   "Soro",
   "Sublimação",
   "Subluxação",
