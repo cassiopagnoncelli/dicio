@@ -578,6 +578,7 @@ const level_4 = [
   "Frol",
   "Fumé",
   "Fusão",
+  "Fuselagem",
   "Galantine",
   "Gálata",
   "Gálea",
