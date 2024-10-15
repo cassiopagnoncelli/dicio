@@ -600,6 +600,7 @@ const level_4 = [
   "Glotologia",
   "Gnose",
   "Gólgota",
+  "Guelra",
   "Hemostasia",
   "Hermenêutica",
   "Hermético",
