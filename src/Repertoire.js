@@ -25,7 +25,16 @@ function Repertoire() {
   const [questionPool, setQuestionPool] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const N = 289; // Number of words to test
+  // Error margin configurations
+  const ERROR_MARGIN_CONFIGS = {
+    5: { words: 289, margin: 5 },
+    7: { words: 147, margin: 7 }
+  };
+  
+  const DEFAULT_ERROR_MARGIN = 7; // Default to 7% error margin
+  const config = ERROR_MARGIN_CONFIGS[DEFAULT_ERROR_MARGIN];
+  const N = config.words; // Number of words to test
+  const ERROR_MARGIN = config.margin; // Error margin percentage
   const TOTAL_WORDS = 312368; // Total words in Portuguese dictionary
 
   useEffect(() => {
@@ -318,14 +327,14 @@ function Repertoire() {
               margin: '0 0 15px 0',
               textShadow: '0 2px 4px rgba(0,0,0,0.3)',
               color: 'white'
-            }}>📊 Análise do Repertório Lexical</h1>
+            }}>{passiveScore < N * 0.15 ? '⚠️ Teste Inconclusivo' : '📊 Análise do Repertório Lexical'}</h1>
             <p style={{
               fontSize: window.innerWidth < 768 ? '16px' : '20px',
               margin: '0',
               opacity: '0.95',
               fontWeight: '300',
               color: 'white'
-            }}>Estimativa científica do seu vocabulário em português</p>
+            }}>{passiveScore < N * 0.15 ? 'Resultado insuficiente para análise confiável' : 'Estimativa científica do seu vocabulário em português'}</p>
           </div>
 
           {/* Main Content */}
@@ -335,13 +344,61 @@ function Repertoire() {
             margin: '0 auto'
           }}>
             
-            {/* Circles | Detailed Analysis */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr',
-              gap: window.innerWidth < 768 ? '40px' : '60px',
-              marginBottom: window.innerWidth < 768 ? '50px' : '80px'
-            }}>
+            {/* Check if test is inconclusive */}
+            {passiveScore < N * 0.15 ? (
+              /* Inconclusive Result */
+              <div style={{
+                textAlign: 'center',
+                padding: window.innerWidth < 768 ? '40px 20px' : '60px 40px',
+                backgroundColor: '#fff3cd',
+                borderRadius: '16px',
+                border: '2px solid #ffc107',
+                marginBottom: window.innerWidth < 768 ? '40px' : '60px'
+              }}>
+                <h2 style={{
+                  fontSize: window.innerWidth < 768 ? '24px' : '32px',
+                  fontWeight: '700',
+                  color: '#856404',
+                  marginBottom: '30px'
+                }}>⚠️ Resultado Inconclusivo</h2>
+                
+                <p style={{
+                  fontSize: window.innerWidth < 768 ? '18px' : '22px',
+                  color: '#856404',
+                  lineHeight: '1.6',
+                  marginBottom: '30px',
+                  fontWeight: '500'
+                }}>
+                  Teste inconclusivo, o testante conhece uma fração muito pequena de um vocabulário amplo, 
+                  numa faixa onde não é seguro derivar conclusões. Idealmente, o teste deveria ser refeito.
+                </p>
+                
+                <div style={{
+                  padding: window.innerWidth < 768 ? '20px' : '25px',
+                  backgroundColor: '#f8f9fa',
+                  borderRadius: '8px',
+                  textAlign: 'center',
+                  marginTop: '30px'
+                }}>
+                  <p style={{
+                    fontSize: window.innerWidth < 768 ? '16px' : '18px',
+                    color: '#6c757d',
+                    margin: '0',
+                    fontWeight: '500'
+                  }}>
+                    <strong>Dados da amostra:</strong> {passiveScore} palavras reconhecidas de {N} testadas 
+                    ({((passiveScore / N) * 100).toFixed(1)}% - abaixo do limiar de 15% necessário para análise confiável)
+                  </p>
+                </div>
+              </div>
+            ) : (
+              /* Normal Results - Circles | Detailed Analysis */
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr',
+                gap: window.innerWidth < 768 ? '40px' : '60px',
+                marginBottom: window.innerWidth < 768 ? '50px' : '80px'
+              }}>
               
               {/* Circles */}
               <div style={{
@@ -466,6 +523,7 @@ function Repertoire() {
                 })()}
               </div>
             </div>
+            )}
 
             {/* Metodologia Científica */}
             <div>
@@ -484,14 +542,14 @@ function Repertoire() {
                 <p style={{ marginBottom: window.innerWidth < 768 ? '25px' : '30px' }}>
                   Esta análise utiliza <strong>amostragem estatística</strong> para estimar seu vocabulário total a partir de uma amostra de {N} palavras 
                   do dicionário português (312.368 palavras). O cálculo emprega a <strong>proporção amostral</strong> com correção para população finita, 
-                  fornecendo <strong>intervalos de confiança de 95%</strong> e <strong>margem de erro de 5%</strong> tomando como probabilidade a priori
-                  de um falante nativo conhecer uma palavra é estimada em p = 25%.
+                  fornecendo <strong>intervalos de confiança de 95%</strong> com <strong>margem de erro de {ERROR_MARGIN}%</strong>. A probabilidade <em>a priori</em> de
+                  um falante nativo conhecer uma palavra é estimada em <strong>p = 25%</strong>.
                 </p>
                 
                 <p style={{ margin: '0' }}>
-                  O <strong>vocabulário passivo</strong> inclui palavras que você reconhece mas não necessariamente usa, enquanto o 
+                  O <strong>vocabulário passivo</strong> inclui palavras que você reconhece mas não necessariamente as usa, enquanto o 
                   <strong> vocabulário ativo</strong> representa palavras que você domina completamente e emprega na comunicação. 
-                  A metodologia segue princípios de vocabulometria científica, assumindo distribuição aleatória das palavras testadas 
+                  A metodologia segue princípios de estatística, assumindo distribuição aleatória das palavras testadas 
                   e aplicando correções estatísticas apropriadas para populações finitas.
                 </p>
               </div>

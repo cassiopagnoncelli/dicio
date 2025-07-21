@@ -305,7 +305,7 @@ function App() {
                 lineHeight: '1.6',
                 marginBottom: '30px'
               }}>
-                Baseado no seu desempenho, você está qualificado para o <strong>Teste de Repertório Estatístico</strong>&nbsp;
+                Baseado no seu desempenho, você está qualificado para o <strong>Teste de Repertório Estatístico</strong>,
                 que fornecerá uma análise abrangente e precisa do seu vocabulário.
               </p>
               
@@ -415,7 +415,7 @@ function App() {
             }}>
               <button 
                 onClick={() => {
-                  if (window.confirm('Tem certeza?')) {
+                  if (window.confirm('Deseja pular para o Teste Avançado? Isso encerrará o teste atual e o direcionará para a análise estatística mais ampla.')) {
                     navigateTo('/advanced');
                   }
                 }}
