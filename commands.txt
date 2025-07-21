@@ -1,0 +1,3 @@
+sed "s/\/.*$//" Portuguese\ \(Brazilian\).dic | grep "^[[:alpha:]]" | egrep -v -e "\." -e "-" -e "^[A-Z]" | shuf | head -2000 > pt-br.dic
+
+sed "s/\/.*$//" dicts/English\ \(American\).dic | grep "^[[:alpha:]]" | egrep -v -e "\." -e "-" -e "^[A-Z]" | shuf | head -2000 > en-us.dic

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css'; // Import the CSS file
 import dict from './words';
+import Repertoire from './Repertoire';
 
 // Fisher-Yates Shuffle
 function shuffleArray(array) {
@@ -12,6 +13,9 @@ function shuffleArray(array) {
 }
 
 function App() {
+  // Routing state
+  const [currentRoute, setCurrentRoute] = useState(window.location.pathname);
+  
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [passiveScore, setPassiveScore] = useState(0);
   const [activeScore, setActiveScore] = useState(0);
@@ -163,9 +167,22 @@ function App() {
     }
   };
 
+  // Handle browser navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentRoute(window.location.pathname);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (isFinished) return; // Do nothing if the test is finished
+      if (isFinished || currentRoute === '/repertoire') return; // Do nothing if the test is finished or on repertoire page
 
       switch (event.key) {
         case '1':
@@ -190,7 +207,12 @@ function App() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleAnswer, isFinished]);
+  }, [handleAnswer, isFinished, currentRoute]);
+
+  // Render different components based on route
+  if (currentRoute === '/repertoire') {
+    return <Repertoire />;
+  }
 
   return (
     <div>

@@ -709,6 +709,7 @@ const level_4 = [
   "Proscênio",
   "Protoplasma",
   "Pseudocódigo",
+  "Pticográfico",
   "Quadrivium",
   "Quiasmo",
   "Quimera",
