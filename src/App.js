@@ -28,19 +28,19 @@ function App() {
   const [unusedWords, setUnusedWords] = useState([]); // Separate list for unused words
   const [unusedCounter, setUnusedCounter] = useState(0); // Counter for unused words
   const [finalLevel, setFinalLevel] = useState(null); // Stores the final determined level
+  const [showTransition, setShowTransition] = useState(false); // Show transition message for fluente level
 
-  const levelLabels = ["Nível básico", "Nível intermediário", "Nível fluente", "Nível provecto"];
+  const levelLabels = ["Nível básico", "Nível intermediário", "Nível fluente"];
   
   // Define the word ranges for each level
   const wordRanges = {
     1: { min: 0, max: 3000 },
     2: { min: 3000, max: 18000 },
     3: { min: 18000, max: 30000 },
-    4: { min: 30000, max: 48000 },
   };
 
   useEffect(() => {
-    if (level <= 4) {
+    if (level <= 3) {
       const wordPoolSize = phase === 1 ? 24 : 48; // Phase 1: 24 words, Phase 2: 48 words
       const filteredWords = dict[level - 1].filter((word) => !usedWords.includes(word));
 
@@ -60,6 +60,12 @@ function App() {
     setUnusedCounter(0); // Reset the unused counter
   };
 
+  // Navigation function
+  const navigateTo = (path) => {
+    window.history.pushState({}, '', path);
+    setCurrentRoute(path);
+  };
+
   // Memoize the evaluateScores function using useCallback
   const evaluateScores = useCallback((score) => {
     if (phase === 1) {
@@ -76,10 +82,9 @@ function App() {
         setPhase(2); // Move to phase 2 (refinement phase)
         resetScores();
       } else if (score >= 18) {
-        if (level === 4) {
-          setFinalLevel(level);
-          setPhase(2);
-          resetScores();
+        if (level === 3) {
+          // If user progresses level 3 (fluente), show transition message
+          setShowTransition(true);
         } else {
           setLevel(level + 1);
           resetScores();
@@ -182,7 +187,7 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (isFinished || currentRoute === '/repertoire') return; // Do nothing if the test is finished or on repertoire page
+      if (isFinished || currentRoute === '/advanced') return; // Do nothing if the test is finished or on advanced page
 
       switch (event.key) {
         case '1':
@@ -210,8 +215,14 @@ function App() {
   }, [handleAnswer, isFinished, currentRoute]);
 
   // Render different components based on route
-  if (currentRoute === '/repertoire') {
+  if (currentRoute === '/advanced') {
     return <Repertoire />;
+  }
+
+  // Redirect root to assessment
+  if (currentRoute === '/') {
+    navigateTo('/assessment');
+    return null;
   }
 
   if (currentRoute === '/assessment') {
@@ -264,7 +275,57 @@ function App() {
           </div>
         )}
 
-        {!isFinished && (
+        {showTransition && (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '80vh',
+            padding: '40px 20px',
+            textAlign: 'center'
+          }}>
+            <div style={{
+              backgroundColor: '#f8f9fa',
+              borderRadius: '16px',
+              padding: window.innerWidth < 768 ? '30px' : '40px',
+              maxWidth: '600px',
+              border: '2px solid #007bff'
+            }}>
+              <h2 style={{
+                fontSize: window.innerWidth < 768 ? '24px' : '32px',
+                fontWeight: '700',
+                color: '#495057',
+                marginBottom: '20px'
+              }}>📋 Teste Estendido Qualificado</h2>
+              
+              <p style={{
+                fontSize: window.innerWidth < 768 ? '16px' : '18px',
+                color: '#495057',
+                lineHeight: '1.6',
+                marginBottom: '30px'
+              }}>
+                Baseado no seu desempenho, você está qualificado para o <strong>Teste de Repertório Estatístico</strong>&nbsp;
+                que fornecerá uma análise abrangente e precisa do seu vocabulário.
+              </p>
+              
+              <button onClick={() => navigateTo('/advanced')} style={{
+                backgroundColor: '#007bff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '15px 30px',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}>
+                Prosseguir para Teste Estendido
+              </button>
+            </div>
+          </div>
+        )}
+
+        {!isFinished && !showTransition && (
           <div style={{
             display: 'flex',
             flexDirection: 'column',
@@ -346,6 +407,30 @@ function App() {
             }}>
               Use as teclas 1, 2, 3, 4 para escolher rapidamente entre as opções.
             </p>
+            
+            <p style={{
+              marginTop: '20px',
+              fontSize: '12px',
+              textAlign: 'center'
+            }}>
+              <button 
+                onClick={() => {
+                  if (window.confirm('Tem certeza?')) {
+                    navigateTo('/advanced');
+                  }
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#007bff',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  textDecoration: 'underline'
+                }}
+              >
+                Pular para o teste avançado, ignorando a avaliação inicial.
+              </button>
+            </p>
           </div>
         )}
 
@@ -367,29 +452,96 @@ function App() {
                   color: '#495057',
                   marginBottom: '20px'
                 }}>{levelLabels[finalLevel - 1]}</h3>
-                <h1 style={{
-                  fontSize: window.innerWidth < 768 ? '32px' : '48px',
-                  fontWeight: 'bold',
-                  color: '#2d3436',
-                  marginBottom: '40px'
-                }}>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')} palavras</h1>
-                <div style={{ 
-                  textAlign: 'left', 
-                  maxWidth: '600px',
-                  margin: '0 auto',
-                  fontSize: window.innerWidth < 768 ? '16px' : '18px',
-                  lineHeight: '1.6'
-                }}>
-                  {/* Vocabulário passivo */}
-                  <p style={{ marginBottom: '20px' }}>
-                    Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')}</strong> no vocabulário passivo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
-                  </p>
+                
+                {/* Custom messages for different levels and phases */}
+                {finalLevel === 1 && phase === 1 && (
+                  <div style={{ 
+                    textAlign: 'center', 
+                    maxWidth: '700px',
+                    margin: '0 auto',
+                    fontSize: window.innerWidth < 768 ? '16px' : '18px',
+                    lineHeight: '1.6'
+                  }}>
+                    <p style={{ margin: '0', color: '#495057' }}>
+                      Repertório léxico severamente limitado em palavras do cotidiano, em geral, contendo menos de 300 palavras.
+                    </p>
+                  </div>
+                )}
 
-                  {/* Vocabulário ativo */}
-                  <p style={{ marginBottom: '0' }}>
-                    Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, activeScore)).toLocaleString('pt-BR')}</strong> no vocabulário ativo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
-                  </p>
-                </div>
+                {finalLevel === 1 && phase === 2 && (
+                  <div style={{ 
+                    textAlign: 'center', 
+                    maxWidth: '700px',
+                    margin: '0 auto',
+                    fontSize: window.innerWidth < 768 ? '16px' : '18px',
+                    lineHeight: '1.6'
+                  }}>
+                    <p style={{ margin: '0', color: '#495057' }}>
+                      Repertório léxico limitado com conhecimentos insuficientes para progredir para uma amostragem mais ampla, 
+                      a comunicação é lacônica, fracionada, são vocabulários que se estendem de poucas centenas até pouco mais de 2 mil palavras.
+                    </p>
+                  </div>
+                )}
+
+                {finalLevel === 2 && phase === 1 && (
+                  <div style={{ 
+                    textAlign: 'center', 
+                    maxWidth: '700px',
+                    margin: '0 auto',
+                    fontSize: window.innerWidth < 768 ? '16px' : '18px',
+                    lineHeight: '1.6'
+                  }}>
+                    <p style={{ margin: '0', color: '#495057' }}>
+                      Repertório léxico na transição do básico ao intermediário, o testante é capaz de interpretar contextos e 
+                      rapidamente compreender o tema central, mas ainda requer suporte recorrente do dicionário, são vocabulários 
+                      que se estendem além de 2 mil até poucos milhares de palavras.
+                    </p>
+                  </div>
+                )}
+
+                {finalLevel === 2 && phase === 2 && (
+                  <div style={{ 
+                    textAlign: 'center', 
+                    maxWidth: '700px',
+                    margin: '0 auto',
+                    fontSize: window.innerWidth < 768 ? '16px' : '18px',
+                    lineHeight: '1.6'
+                  }}>
+                    <p style={{ margin: '0', color: '#495057' }}>
+                      Repertório léxico intermediário, o testante é capaz de interpretar contextos diversos, incluindo palavras do cotidiano, 
+                      jargões pontuais, dispensa o suporte de dicionário em leituras cursórias, são vocabulários diversos acima de 5 mil palavras 
+                      até um teto de 10 a 15 mil palavras, dependendo do enfoque e jargões técnicos.
+                    </p>
+                  </div>
+                )}
+
+                {finalLevel === 3 && (
+                  <div>
+                    <h1 style={{
+                      fontSize: window.innerWidth < 768 ? '32px' : '48px',
+                      fontWeight: 'bold',
+                      color: '#2d3436',
+                      marginBottom: '40px'
+                    }}>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')} palavras</h1>
+                    <div style={{ 
+                      textAlign: 'left', 
+                      maxWidth: '600px',
+                      margin: '0 auto',
+                      fontSize: window.innerWidth < 768 ? '16px' : '18px',
+                      lineHeight: '1.6'
+                    }}>
+                      {/* Vocabulário passivo */}
+                      <p style={{ marginBottom: '20px' }}>
+                        Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')}</strong> no vocabulário passivo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
+                      </p>
+
+                      {/* Vocabulário ativo */}
+                      <p style={{ marginBottom: '0' }}>
+                        Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, activeScore)).toLocaleString('pt-BR')}</strong> no vocabulário ativo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -413,12 +565,6 @@ function App() {
       </div>
     );
   }
-
-  // Navigation function
-  const navigateTo = (path) => {
-    window.history.pushState({}, '', path);
-    setCurrentRoute(path);
-  };
 
   // Home page - level selection
   return (
@@ -487,7 +633,7 @@ function App() {
               lineHeight: '1.5',
               marginBottom: '20px'
             }}>
-              Teste inteligente que se adapta ao seu nível. Determina automaticamente se você é básico, intermediário, fluente ou provecto.
+              Teste inteligente que se adapta ao seu nível. Determina automaticamente se você é básico, intermediário ou fluente.
             </p>
             <button style={{
               backgroundColor: '#007bff',
@@ -511,7 +657,7 @@ function App() {
             boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
             border: '1px solid #e9ecef',
             cursor: 'pointer'
-          }} onClick={() => navigateTo('/repertoire')}>
+          }} onClick={() => navigateTo('/advanced')}>
             <h3 style={{
               fontSize: window.innerWidth < 768 ? '20px' : '24px',
               fontWeight: '700',
@@ -524,7 +670,7 @@ function App() {
               lineHeight: '1.5',
               marginBottom: '20px'
             }}>
-              Análise estatística completa com 289 palavras. Fornece estimativa científica do seu vocabulário total com intervalos de confiança.
+              Análise estatística completa. Fornece estimativa científica do seu vocabulário total com intervalos de confiança.
             </p>
             <button style={{
               backgroundColor: '#28a745',
