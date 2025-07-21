@@ -216,66 +216,194 @@ function App() {
 
   return (
     <div>
-      <div className="container">
-        {!isFinished && (
-          <div className="header-bar">
+      {!isFinished && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: '20px',
+          backgroundColor: '#f8f9fa',
+          borderBottom: '1px solid #dee2e6',
+          position: 'relative'
+        }}>
+          {/* Left: Back button */}
+          <div style={{ flex: '0 0 auto' }}>
             {currentQuestion > 0 && (
-              <div className="back-button-container">
-                <button className="back-button" onClick={handleBack}>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-left">
-                    <line x1="19" y1="12" x2="5" y2="12"></line>
-                    <polyline points="12 19 5 12 12 5"></polyline>
-                  </svg>
-                </button>
-              </div>
-            )}
-            <div className="center-text">
-              {phase === 1 ? levelLabels[level - 1] : `Refinamento ${levelLabels[level - 1]}`}
-            </div>
-            <div className="right-text">
-              {phase === 1 ? currentQuestion + 1 : unusedCounter + 1} / {phase === 1 ? questionPool.length : Math.min(36, unusedWords.length)}
-            </div>
-          </div>
-        )}
-
-        {isFinished ? (
-          <div>
-            {finalLevel !== null && (
-              <div>
-                <h3>{levelLabels[finalLevel - 1]}</h3>
-                <h1>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')} palavras</h1>
-                <div style={{ textAlign: 'left', listStyleType: 'none', marginTop: '30px' }}>
-                  {/* Vocabulário passivo */}
-                  <p>
-                    Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')}</strong> no vocabulário passivo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
-                  </p>
-
-                  {/* Vocabulário ativo */}
-                  <p>
-                    Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, activeScore)).toLocaleString('pt-BR')}</strong> no vocabulário ativo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
-                  </p>
-                </div>
-              </div>
+              <button onClick={handleBack} style={{
+                background: 'none',
+                border: 'none',
+                fontSize: '24px',
+                cursor: 'pointer',
+                color: '#6c757d'
+              }}>
+                ←
+              </button>
             )}
           </div>
-        ) : (
-          <div>
-            <p class="word"><strong>{phase === 1 ? questionPool[currentQuestion] : unusedWords[unusedCounter]}</strong></p>
-
-            <button className="option-a" onClick={() => handleAnswer('A')}>Desconheço</button>
-            <button className="option-b" onClick={() => handleAnswer('B')}>Tenho vaga ideia</button>
-            <button className="option-c" onClick={() => handleAnswer('C')}>Reconheço mas nunca usei</button>
-            <button className="option-d" onClick={() => handleAnswer('D')}>Conheço e sei empregar</button>
-
-            <footer>
-              <p>Use as teclas 1, 2, 3, 4 para escolher rapidamente entre as opções.</p>
-            </footer>
+          
+          {/* Center: Title */}
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: '18px',
+            fontWeight: '600',
+            color: '#495057'
+          }}>
+            {phase === 1 ? levelLabels[level - 1] : `Refinamento ${levelLabels[level - 1]}`}
           </div>
-        )}
-      </div>
-      <footer>
+          
+          {/* Right: Counter */}
+          <div style={{
+            marginLeft: 'auto',
+            fontSize: '16px',
+            color: '#6c757d'
+          }}>
+            {phase === 1 ? currentQuestion + 1 : unusedCounter + 1} / {phase === 1 ? questionPool.length : Math.min(36, unusedWords.length)}
+          </div>
+        </div>
+      )}
+
+      {!isFinished && (
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '80vh',
+          padding: '40px 20px'
+        }}>
+          <p style={{
+            fontSize: window.innerWidth < 768 ? '28px' : '36px',
+            fontWeight: 'bold',
+            marginBottom: '40px',
+            textAlign: 'center'
+          }}>
+            {phase === 1 ? 
+              (questionPool[currentQuestion] && questionPool[currentQuestion].charAt(0).toUpperCase() + questionPool[currentQuestion].slice(1)) :
+              (unusedWords[unusedCounter] && unusedWords[unusedCounter].charAt(0).toUpperCase() + unusedWords[unusedCounter].slice(1))
+            }
+          </p>
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '15px',
+            width: '100%',
+            maxWidth: '500px'
+          }}>
+            <button onClick={() => handleAnswer('A')} style={{
+              padding: '15px 20px',
+              fontSize: '16px',
+              backgroundColor: '#dc3545',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}>
+              Desconheço
+            </button>
+            <button onClick={() => handleAnswer('B')} style={{
+              padding: '15px 20px',
+              fontSize: '16px',
+              backgroundColor: '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}>
+              Tenho vaga ideia
+            </button>
+            <button onClick={() => handleAnswer('C')} style={{
+              padding: '15px 20px',
+              fontSize: '16px',
+              backgroundColor: '#ffc107',
+              color: 'black',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}>
+              Reconheço mas nunca usei
+            </button>
+            <button onClick={() => handleAnswer('D')} style={{
+              padding: '15px 20px',
+              fontSize: '16px',
+              backgroundColor: '#28a745',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}>
+              Conheço e sei empregar
+            </button>
+          </div>
+
+          <p style={{
+            marginTop: '30px',
+            fontSize: '14px',
+            color: '#6c757d',
+            textAlign: 'center'
+          }}>
+            Use as teclas 1, 2, 3, 4 para escolher rapidamente entre as opções.
+          </p>
+        </div>
+      )}
+
+      {isFinished && (
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          padding: '40px 20px',
+          textAlign: 'center'
+        }}>
+          {finalLevel !== null && (
+            <div>
+              <h3 style={{
+                fontSize: window.innerWidth < 768 ? '20px' : '24px',
+                fontWeight: '600',
+                color: '#495057',
+                marginBottom: '20px'
+              }}>{levelLabels[finalLevel - 1]}</h3>
+              <h1 style={{
+                fontSize: window.innerWidth < 768 ? '32px' : '48px',
+                fontWeight: 'bold',
+                color: '#2d3436',
+                marginBottom: '40px'
+              }}>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')} palavras</h1>
+              <div style={{ 
+                textAlign: 'left', 
+                maxWidth: '600px',
+                margin: '0 auto',
+                fontSize: window.innerWidth < 768 ? '16px' : '18px',
+                lineHeight: '1.6'
+              }}>
+                {/* Vocabulário passivo */}
+                <p style={{ marginBottom: '20px' }}>
+                  Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')}</strong> no vocabulário passivo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
+                </p>
+
+                {/* Vocabulário ativo */}
+                <p style={{ marginBottom: '0' }}>
+                  Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, activeScore)).toLocaleString('pt-BR')}</strong> no vocabulário ativo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      <footer style={{ 
+        marginTop: 'auto', 
+        padding: '20px', 
+        textAlign: 'center', 
+        borderTop: '1px solid #dee2e6',
+        fontSize: '14px',
+        color: '#6c757d'
+      }}>
         Código-fonte disponível em
-        <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer" style={{ marginLeft: '5px', color: '#007bff' }}>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.207 11.387.6.112.793-.262.793-.583 0-.288-.01-1.05-.015-2.06-3.338.727-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.09-.746.083-.73.083-.73 1.204.084 1.837 1.237 1.837 1.237 1.07 1.834 2.809 1.305 3.495.997.108-.774.418-1.305.76-1.605-2.666-.305-5.467-1.333-5.467-5.93 0-1.31.47-2.38 1.237-3.22-.125-.304-.537-1.527.117-3.176 0 0 1.01-.324 3.3 1.23a11.48 11.48 0 0 1 3.006-.404 11.5 11.5 0 0 1 3.006.404c2.29-1.554 3.3-1.23 3.3-1.23.655 1.65.243 2.873.118 3.176.77.84 1.237 1.91 1.237 3.22 0 4.61-2.803 5.624-5.474 5.922.43.372.81 1.102.81 2.222 0 1.606-.014 2.898-.014 3.293 0 .324.193.698.8.58C20.565 21.797 24 17.298 24 12 24 5.37 18.63 0 12 0z"/>
           </svg> Cássio Pagnoncelli
