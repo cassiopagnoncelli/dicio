@@ -62,7 +62,7 @@ function Repertoire() {
     };
 
     loadDictionary();
-  }, []);
+  }, [N]);
 
   const handleAnswer = useCallback((answer) => {
     if (isFinished) return;
@@ -483,7 +483,6 @@ function Repertoire() {
                         <div style={{ fontSize: window.innerWidth < 768 ? '16px' : '18px', lineHeight: '1.6' }}>
                           <p style={{ margin: '12px 0' }}><strong>Estimativa:</strong> {passiveStats.estimate.toLocaleString('pt-BR')} palavras</p>
                           <p style={{ margin: '12px 0' }}><strong>Intervalo (95%):</strong> {passiveStats.lower_bound.toLocaleString('pt-BR')} — {passiveStats.upper_bound.toLocaleString('pt-BR')} palavras</p>
-                          <p style={{ margin: '12px 0' }}><strong>Margem de erro:</strong> ≈{passiveStats.margin_error.toFixed(1)}%</p>
                         </div>
                       </div>
 
@@ -498,7 +497,6 @@ function Repertoire() {
                         <div style={{ fontSize: window.innerWidth < 768 ? '16px' : '18px', lineHeight: '1.6' }}>
                           <p style={{ margin: '12px 0' }}><strong>Estimativa:</strong> {activeStats.estimate.toLocaleString('pt-BR')} palavras</p>
                           <p style={{ margin: '12px 0' }}><strong>Intervalo (95%):</strong> {activeStats.lower_bound.toLocaleString('pt-BR')} — {activeStats.upper_bound.toLocaleString('pt-BR')} palavras</p>
-                          <p style={{ margin: '12px 0' }}><strong>Margem de erro:</strong> ≈{activeStats.margin_error.toFixed(1)}%</p>
                         </div>
                       </div>
 
