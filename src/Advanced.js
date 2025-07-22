@@ -111,32 +111,44 @@ function Advanced() {
     }
   };
 
-  // Calculate vocabulary estimates with confidence intervals
+  // Calculate vocabulary estimates with confidence intervals using Log-Normal distribution
   const calculateStatistics = (knownWords) => {
     const p_hat = knownWords / N; // Sample proportion
     const estimate = Math.round(p_hat * TOTAL_WORDS);
     
-    // Standard error with finite population correction
-    const p_variance = p_hat * (1 - p_hat);
+    // Avoid log(0) by using a small minimum value
+    const min_proportion = 1 / TOTAL_WORDS;
+    const adjusted_p_hat = Math.max(p_hat, min_proportion);
+    
+    // Log-Normal approach: work in log space
+    const log_estimate = Math.log(adjusted_p_hat * TOTAL_WORDS);
+    
+    // Standard error in log space with finite population correction
+    const p_variance = adjusted_p_hat * (1 - adjusted_p_hat);
     const finite_correction = (TOTAL_WORDS - N) / (TOTAL_WORDS - 1);
-    const standard_error = Math.sqrt((p_variance / N) * finite_correction);
+    const standard_error_proportion = Math.sqrt((p_variance / N) * finite_correction);
     
-    // 95% confidence interval
+    // Convert standard error to log space using delta method
+    const log_standard_error = standard_error_proportion / adjusted_p_hat;
+    
+    // 95% confidence interval in log space
     const z_score = 1.96; // For 95% confidence
-    const margin_error = z_score * standard_error;
-    const lower_bound_proportion = Math.max(0, p_hat - margin_error);
-    const upper_bound_proportion = Math.min(1, p_hat + margin_error);
+    const log_margin_error = z_score * log_standard_error;
     
-    const lower_bound = Math.round(lower_bound_proportion * TOTAL_WORDS);
-    const upper_bound = Math.round(upper_bound_proportion * TOTAL_WORDS);
+    // Calculate bounds in log space then transform back
+    const log_lower = log_estimate - log_margin_error;
+    const log_upper = log_estimate + log_margin_error;
+    
+    const lower_bound = Math.max(1, Math.round(Math.exp(log_lower)));
+    const upper_bound = Math.round(Math.exp(log_upper));
     
     return {
       estimate,
       lower_bound,
       upper_bound,
       proportion: p_hat,
-      margin_error: margin_error * 100, // Convert to percentage
-      standard_error
+      margin_error: log_margin_error * 100, // Convert to percentage (in log space)
+      standard_error: standard_error_proportion
     };
   };
 
@@ -196,7 +208,7 @@ function Advanced() {
           
           {/* Center: Title */}
           <div className="absolute left-1/2 transform -translate-x-1/2 text-lg font-semibold text-gray-700">
-            Teste Avançado
+            Teste Amplo
           </div>
           
           {/* Right: Counter */}
@@ -308,7 +320,7 @@ function Advanced() {
                   </div>
                 </div>
               ) : (
-                /* Mobile Normal Results */
+                /* Mobile Log-normal Results */
                 <>
                   {/* Mobile Results Section */}
                   <section style={{ marginBottom: '30px' }}>
@@ -557,7 +569,7 @@ function Advanced() {
                   </div>
                 </div>
               ) : (
-                /* Desktop Normal Results */
+                /* Desktop Log-normal Results */
                 <>
                   {/* Desktop Results Section */}
                   <section style={{ marginBottom: '60px' }}>

@@ -298,9 +298,9 @@ function App() {
             <p className="mt-5 text-xs text-center">
               <button 
                 onClick={() => {
-                  if (window.confirm('Deseja pular para o Teste Avançado? Isso encerrará o teste atual e o direcionará para a análise estatística mais ampla.')) {
+                  // if (window.confirm('Deseja pular para o Teste Avançado? Isso encerrará o teste atual e o direcionará para a análise estatística mais ampla.')) {
                     navigateTo('/advanced');
-                  }
+                  // }
                 }}
                 className="bg-transparent border-none text-blue-500 cursor-pointer text-xs underline hover:text-blue-600"
               >
