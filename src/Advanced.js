@@ -26,12 +26,12 @@ function Advanced() {
 
   // Error margin configurations
   const ERROR_MARGIN_CONFIGS = {
-    50: { words: 5, margin: 5 },
+    50: { words: 5, margin: 50 },
     5: { words: 289, margin: 5 },
     7: { words: 147, margin: 7 }
   };
   
-  const DEFAULT_ERROR_MARGIN = 50; // Default to 7% error margin
+  const DEFAULT_ERROR_MARGIN = 5; // Default to 7% error margin
   const config = ERROR_MARGIN_CONFIGS[DEFAULT_ERROR_MARGIN];
   const N = config.words; // Number of words to test
   const ERROR_MARGIN = config.margin; // Error margin percentage
@@ -252,26 +252,10 @@ function Advanced() {
           /* MOBILE VERSION - Tailwind classes */
           <div className="min-h-screen flex flex-col">
             {/* Mobile Header */}
-            <header className="bg-gradient-to-br from-indigo-500 to-purple-600 py-10 px-5 text-center text-white relative overflow-hidden">
-              <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-radial from-white/10 to-transparent pointer-events-none"></div>
-              
-              <div className="relative z-10">
-                <h1 className="text-2xl font-extrabold mb-3 drop-shadow-lg text-white leading-tight">
-                  {passiveScore < N * 0.15 ? '⚠️ Teste Inconclusivo' : '📊 Análise do Repertório Lexical'}
-                </h1>
-                
-                <p className="text-sm m-0 opacity-95 font-normal text-white leading-snug drop-shadow-sm">
-                  {passiveScore < N * 0.15 ? 'Resultado insuficiente para análise confiável' : 'Estimativa científica do seu vocabulário em português'}
-                </p>
-                
-                {passiveScore >= N * 0.15 && (
-                  <div className="mt-4 py-2 px-4 bg-white/15 rounded-2xl inline-block backdrop-blur-sm">
-                    <p className="text-xs m-0 text-white font-medium opacity-90">
-                      ✨ Análise baseada em {N} palavras testadas com {ERROR_MARGIN}% de margem de erro
-                    </p>
-                  </div>
-                )}
-              </div>
+            <header className="py-8 px-5 text-center bg-white border-b border-gray-200">
+              <h1 className="text-xl font-bold text-gray-800">
+                Vocabulômetro
+              </h1>
             </header>
 
             {/* Mobile Main Content */}
@@ -501,68 +485,19 @@ function Advanced() {
           <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             {/* Desktop Header */}
             <header style={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              padding: '60px 40px',
+              padding: '40px',
               textAlign: 'center',
-              color: 'white',
-              position: 'relative',
-              overflow: 'hidden'
+              backgroundColor: 'white',
+              borderBottom: '1px solid #e5e7eb'
             }}>
-              <div style={{
-                position: 'absolute',
-                top: '-50%',
-                left: '-50%',
-                width: '200%',
-                height: '200%',
-                background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
-                pointerEvents: 'none'
-              }}></div>
-              
-              <div style={{ position: 'relative', zIndex: 1, maxWidth: '1200px', margin: '0 auto' }}>
-                <h1 style={{ 
-                  fontSize: '42px',
-                  fontWeight: '800',
-                  margin: '0 0 16px 0',
-                  textShadow: '0 3px 6px rgba(0,0,0,0.4)',
-                  color: 'white',
-                  lineHeight: '1.2'
-                }}>
-                  {passiveScore < N * 0.15 ? '⚠️ Teste Inconclusivo' : '📊 Análise do Repertório Lexical'}
-                </h1>
-                
-                <p style={{
-                  fontSize: '20px',
-                  margin: '0',
-                  opacity: '0.95',
-                  fontWeight: '400',
-                  color: 'white',
-                  lineHeight: '1.4',
-                  textShadow: '0 2px 4px rgba(0,0,0,0.3)'
-                }}>
-                  {passiveScore < N * 0.15 ? 'Resultado insuficiente para análise confiável' : 'Estimativa científica do seu vocabulário em português'}
-                </p>
-                
-                {passiveScore >= N * 0.15 && (
-                  <div style={{
-                    marginTop: '20px',
-                    padding: '12px 20px',
-                    backgroundColor: 'rgba(255,255,255,0.15)',
-                    borderRadius: '20px',
-                    display: 'inline-block',
-                    backdropFilter: 'blur(10px)'
-                  }}>
-                    <p style={{
-                      fontSize: '15px',
-                      margin: '0',
-                      color: 'white',
-                      fontWeight: '500',
-                      opacity: '0.9'
-                    }}>
-                      ✨ Análise baseada em {N} palavras testadas com {ERROR_MARGIN}% de margem de erro
-                    </p>
-                  </div>
-                )}
-              </div>
+              <h1 style={{ 
+                fontSize: '32px',
+                fontWeight: '700',
+                margin: '0',
+                color: '#1f2937'
+              }}>
+                Vocabulômetro
+              </h1>
             </header>
 
             {/* Desktop Main Content */}
