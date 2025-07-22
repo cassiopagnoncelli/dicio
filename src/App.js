@@ -663,7 +663,7 @@ function App() {
               fontWeight: '700',
               color: '#2d3436',
               marginBottom: '15px'
-            }}>📊 Teste de Repertório</h3>
+            }}>📊 Teste Avançado</h3>
             <p style={{
               fontSize: window.innerWidth < 768 ? '14px' : '16px',
               color: '#6c757d',
