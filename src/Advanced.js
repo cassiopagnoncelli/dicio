@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './App.css';
 
 // Function to shuffle array (Fisher-Yates)
 function shuffleArray(array) {
@@ -176,141 +175,76 @@ function Advanced() {
 
   if (isLoading) {
     return (
-      <div className="container">
-        <p>Carregando dicionário...</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg text-gray-600">Carregando dicionário...</p>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       {!isFinished && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          padding: '20px',
-          backgroundColor: '#f8f9fa',
-          borderBottom: '1px solid #dee2e6',
-          position: 'relative'
-        }}>
+        <div className="flex items-center p-5 bg-gray-50 border-b border-gray-200 relative">
           {/* Left: Back button */}
-          <div style={{ flex: '0 0 auto' }}>
+          <div className="flex-none">
             {currentQuestion > 0 && (
-              <button onClick={handleBack} style={{
-                background: 'none',
-                border: 'none',
-                fontSize: '24px',
-                cursor: 'pointer',
-                color: '#6c757d'
-              }}>
+              <button onClick={handleBack} className="bg-transparent border-none text-2xl cursor-pointer text-gray-500 hover:text-gray-700">
                 ←
               </button>
             )}
           </div>
           
           {/* Center: Title */}
-          <div style={{
-            position: 'absolute',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            fontSize: '18px',
-            fontWeight: '600',
-            color: '#495057'
-          }}>
+          <div className="absolute left-1/2 transform -translate-x-1/2 text-lg font-semibold text-gray-700">
             Teste Avançado
           </div>
           
           {/* Right: Counter */}
-          <div style={{
-            marginLeft: 'auto',
-            fontSize: '16px',
-            color: '#6c757d'
-          }}>
+          <div className="ml-auto text-base text-gray-500">
             {currentQuestion + 1} / {questionPool.length}
           </div>
         </div>
       )}
 
       {!isFinished && (
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '80vh',
-          padding: '40px 20px'
-        }}>
-          <p style={{
-            fontSize: window.innerWidth < 768 ? '28px' : '36px',
-            fontWeight: 'bold',
-            marginBottom: '40px',
-            textAlign: 'center'
-          }}>
+        <div className="flex flex-col items-center justify-center min-h-[80vh] py-10 px-5">
+          <p className="text-3xl md:text-4xl font-bold mb-10 text-center">
             {questionPool[currentQuestion] && questionPool[currentQuestion].charAt(0).toUpperCase() + questionPool[currentQuestion].slice(1)}
           </p>
 
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '15px',
-            width: '100%',
-            maxWidth: '500px'
-          }}>
-            <button onClick={() => handleAnswer('A')} style={{
-              padding: '15px 20px',
-              fontSize: '16px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer'
-            }}>
+          <div className="flex flex-col gap-4 w-full max-w-lg">
+            <button onClick={() => handleAnswer('A')} className="py-4 px-5 text-base bg-red-500 text-white border-none rounded-lg cursor-pointer hover:bg-red-600 transition-colors">
               Desconheço
             </button>
-            <button onClick={() => handleAnswer('B')} style={{
-              padding: '15px 20px',
-              fontSize: '16px',
-              backgroundColor: '#6c757d',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer'
-            }}>
+            <button onClick={() => handleAnswer('B')} className="py-4 px-5 text-base bg-gray-500 text-white border-none rounded-lg cursor-pointer hover:bg-gray-600 transition-colors">
               Tenho vaga ideia
             </button>
-            <button onClick={() => handleAnswer('C')} style={{
-              padding: '15px 20px',
-              fontSize: '16px',
-              backgroundColor: '#ffc107',
-              color: 'black',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer'
-            }}>
+            <button onClick={() => handleAnswer('C')} className="py-4 px-5 text-base bg-yellow-400 text-black border-none rounded-lg cursor-pointer hover:bg-yellow-500 transition-colors">
               Reconheço mas nunca usei
             </button>
-            <button onClick={() => handleAnswer('D')} style={{
-              padding: '15px 20px',
-              fontSize: '16px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer'
-            }}>
+            <button onClick={() => handleAnswer('D')} className="py-4 px-5 text-base bg-green-500 text-white border-none rounded-lg cursor-pointer hover:bg-green-600 transition-colors">
               Conheço e sei empregar
             </button>
           </div>
 
-          <p style={{
-            marginTop: '30px',
-            fontSize: '14px',
-            color: '#6c757d',
-            textAlign: 'center'
-          }}>
+          <p className="mt-8 text-sm text-gray-500 text-center">
             Use as teclas 1, 2, 3, 4 para escolher rapidamente entre as opções.
           </p>
         </div>
+      )}
+
+      {!isFinished && (
+        <footer className="mt-auto py-8 px-5 text-center border-t border-gray-200 bg-gray-50">
+          <p className="m-0 text-sm text-gray-500">
+            Código-fonte disponível em
+            <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer" className="ml-1 text-blue-500 hover:text-blue-600 no-underline">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" className="inline mr-1">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.207 11.387.6.112.793-.262.793-.583 0-.288-.01-1.05-.015-2.06-3.338.727-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.09-.746.083-.73.083-.73 1.204.084 1.837 1.237 1.837 1.237 1.07 1.834 2.809 1.305 3.495.997.108-.774.418-1.305.76-1.605-2.666-.305-5.467-1.333-5.467-5.93 0-1.31.47-2.38 1.237-3.22-.125-.304-.537-1.527.117-3.176 0 0 1.01-.324 3.3 1.23a11.48 11.48 0 0 1 3.006-.404 11.5 11.5 0 0 1 3.006.404c2.29-1.554 3.3-1.23 3.3-1.23.655 1.65.243 2.873.118 3.176.77.84 1.237 1.91 1.237 3.22 0 4.61-2.803 5.624-5.474 5.922.43.372.81 1.102.81 2.222 0 1.606-.014 2.898-.014 3.293 0 .324.193.698.8.58C20.565 21.797 24 17.298 24 12 24 5.37 18.63 0 12 0z"/>
+              </svg>
+              Cássio Pagnoncelli
+            </a>
+          </p>
+        </footer>
       )}
 
       {isFinished && (
@@ -550,25 +484,11 @@ function Advanced() {
             </main>
 
             {/* Mobile Footer */}
-            <footer style={{ 
-              marginTop: 'auto',
-              padding: '24px 20px',
-              textAlign: 'center', 
-              borderTop: '1px solid #dee2e6',
-              backgroundColor: '#f8f9fa'
-            }}>
-              <p style={{
-                margin: '0',
-                fontSize: '12px',
-                color: '#6c757d'
-              }}>
+            <footer className="mt-auto py-6 px-5 text-center border-t border-gray-200 bg-gray-50">
+              <p className="m-0 text-xs text-gray-500">
                 Código-fonte disponível em
-                <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer" style={{ 
-                  marginLeft: '4px',
-                  color: '#007bff',
-                  textDecoration: 'none'
-                }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="10" height="10" fill="currentColor" style={{ marginRight: '3px' }}>
+                <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer" className="ml-1 text-blue-500 hover:text-blue-600 no-underline">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="10" height="10" fill="currentColor" className="inline mr-1">
                     <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.207 11.387.6.112.793-.262.793-.583 0-.288-.01-1.05-.015-2.06-3.338.727-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.09-.746.083-.73.083-.73 1.204.084 1.837 1.237 1.837 1.237 1.07 1.834 2.809 1.305 3.495.997.108-.774.418-1.305.76-1.605-2.666-.305-5.467-1.333-5.467-5.93 0-1.31.47-2.38 1.237-3.22-.125-.304-.537-1.527.117-3.176 0 0 1.01-.324 3.3 1.23a11.48 11.48 0 0 1 3.006-.404 11.5 11.5 0 0 1 3.006.404c2.29-1.554 3.3-1.23 3.3-1.23.655 1.65.243 2.873.118 3.176.77.84 1.237 1.91 1.237 3.22 0 4.61-2.803 5.624-5.474 5.922.43.372.81 1.102.81 2.222 0 1.606-.014 2.898-.014 3.293 0 .324.193.698.8.58C20.565 21.797 24 17.298 24 12 24 5.37 18.63 0 12 0z"/>
                   </svg>
                   Cássio Pagnoncelli
@@ -870,25 +790,11 @@ function Advanced() {
             </main>
 
             {/* Desktop Footer */}
-            <footer style={{ 
-              marginTop: 'auto',
-              padding: '40px 40px',
-              textAlign: 'center', 
-              borderTop: '1px solid #dee2e6',
-              backgroundColor: '#f8f9fa'
-            }}>
-              <p style={{
-                margin: '0',
-                fontSize: '16px',
-                color: '#6c757d'
-              }}>
+            <footer className="mt-auto py-10 px-10 text-center border-t border-gray-200 bg-gray-50">
+              <p className="m-0 text-base text-gray-500">
                 Código-fonte disponível em
-                <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer" style={{ 
-                  marginLeft: '5px',
-                  color: '#007bff',
-                  textDecoration: 'none'
-                }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style={{ marginRight: '4px' }}>
+                <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer" className="ml-1 text-blue-500 hover:text-blue-600 no-underline">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" className="inline mr-1">
                     <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.207 11.387.6.112.793-.262.793-.583 0-.288-.01-1.05-.015-2.06-3.338.727-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.09-.746.083-.73.083-.73 1.204.084 1.837 1.237 1.837 1.237 1.07 1.834 2.809 1.305 3.495.997.108-.774.418-1.305.76-1.605-2.666-.305-5.467-1.333-5.467-5.93 0-1.31.47-2.38 1.237-3.22-.125-.304-.537-1.527.117-3.176 0 0 1.01-.324 3.3 1.23a11.48 11.48 0 0 1 3.006-.404 11.5 11.5 0 0 1 3.006.404c2.29-1.554 3.3-1.23 3.3-1.23.655 1.65.243 2.873.118 3.176.77.84 1.237 1.91 1.237 3.22 0 4.61-2.803 5.624-5.474 5.922.43.372.81 1.102.81 2.222 0 1.606-.014 2.898-.014 3.293 0 .324.193.698.8.58C20.565 21.797 24 17.298 24 12 24 5.37 18.63 0 12 0z"/>
                   </svg>
                   Cássio Pagnoncelli

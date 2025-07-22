@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './App.css'; // Import the CSS file
 import dict from './words';
 import Advanced from './Advanced';
 
@@ -229,96 +228,39 @@ function App() {
     return (
       <div>
         {!isFinished && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: '20px',
-            backgroundColor: '#f8f9fa',
-            borderBottom: '1px solid #dee2e6',
-            position: 'relative'
-          }}>
+          <div className="flex items-center p-5 bg-gray-50 border-b border-gray-200 relative">
             {/* Left: Back button */}
-            <div style={{ flex: '0 0 auto' }}>
+            <div className="flex-none">
               {currentQuestion > 0 && (
-                <button onClick={handleBack} style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '24px',
-                  cursor: 'pointer',
-                  color: '#6c757d'
-                }}>
+                <button onClick={handleBack} className="bg-transparent border-none text-2xl cursor-pointer text-gray-500 hover:text-gray-700">
                   ←
                 </button>
               )}
             </div>
             
             {/* Center: Title */}
-            <div style={{
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              fontSize: '18px',
-              fontWeight: '600',
-              color: '#495057'
-            }}>
+            <div className="absolute left-1/2 transform -translate-x-1/2 text-lg font-semibold text-gray-700">
               {phase === 1 ? levelLabels[level - 1] : `Refinamento ${levelLabels[level - 1]}`}
             </div>
             
             {/* Right: Counter */}
-            <div style={{
-              marginLeft: 'auto',
-              fontSize: '16px',
-              color: '#6c757d'
-            }}>
+            <div className="ml-auto text-base text-gray-500">
               {phase === 1 ? currentQuestion + 1 : unusedCounter + 1} / {phase === 1 ? questionPool.length : Math.min(36, unusedWords.length)}
             </div>
           </div>
         )}
 
         {showTransition && (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '80vh',
-            padding: '40px 20px',
-            textAlign: 'center'
-          }}>
-            <div style={{
-              backgroundColor: '#f8f9fa',
-              borderRadius: '16px',
-              padding: window.innerWidth < 768 ? '30px' : '40px',
-              maxWidth: '600px',
-              border: '2px solid #007bff'
-            }}>
-              <h2 style={{
-                fontSize: window.innerWidth < 768 ? '24px' : '32px',
-                fontWeight: '700',
-                color: '#495057',
-                marginBottom: '20px'
-              }}>📋 Teste Estendido Qualificado</h2>
+          <div className="flex flex-col items-center justify-center min-h-[80vh] py-10 px-5 text-center">
+            <div className="bg-gray-50 rounded-2xl p-8 md:p-10 max-w-2xl border-2 border-blue-500">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-700 mb-5">📋 Teste Estendido Qualificado</h2>
               
-              <p style={{
-                fontSize: window.innerWidth < 768 ? '16px' : '18px',
-                color: '#495057',
-                lineHeight: '1.6',
-                marginBottom: '30px'
-              }}>
+              <p className="text-base md:text-lg text-gray-700 leading-relaxed mb-8">
                 Baseado no seu desempenho, você está qualificado para o <strong>Teste de Repertório Estatístico</strong>,
                 que fornecerá uma análise abrangente e precisa do seu vocabulário.
               </p>
               
-              <button onClick={() => navigateTo('/advanced')} style={{
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '15px 30px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer'
-              }}>
+              <button onClick={() => navigateTo('/advanced')} className="bg-blue-500 text-white border-none rounded-lg py-4 px-8 text-base font-semibold cursor-pointer hover:bg-blue-600 transition-colors">
                 Prosseguir para Teste Estendido
               </button>
             </div>
@@ -326,107 +268,41 @@ function App() {
         )}
 
         {!isFinished && !showTransition && (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '80vh',
-            padding: '40px 20px'
-          }}>
-            <p style={{
-              fontSize: window.innerWidth < 768 ? '28px' : '36px',
-              fontWeight: 'bold',
-              marginBottom: '40px',
-              textAlign: 'center'
-            }}>
+          <div className="flex flex-col items-center justify-center min-h-[80vh] py-10 px-5">
+            <p className="text-3xl md:text-4xl font-bold mb-10 text-center">
               {phase === 1 ? 
                 (questionPool[currentQuestion] && questionPool[currentQuestion].charAt(0).toUpperCase() + questionPool[currentQuestion].slice(1)) :
                 (unusedWords[unusedCounter] && unusedWords[unusedCounter].charAt(0).toUpperCase() + unusedWords[unusedCounter].slice(1))
               }
             </p>
 
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '15px',
-              width: '100%',
-              maxWidth: '500px'
-            }}>
-              <button onClick={() => handleAnswer('A')} style={{
-                padding: '15px 20px',
-                fontSize: '16px',
-                backgroundColor: '#dc3545',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer'
-              }}>
+            <div className="flex flex-col gap-4 w-full max-w-lg">
+              <button onClick={() => handleAnswer('A')} className="py-4 px-5 text-base bg-red-500 text-white border-none rounded-lg cursor-pointer hover:bg-red-600 transition-colors">
                 Desconheço
               </button>
-              <button onClick={() => handleAnswer('B')} style={{
-                padding: '15px 20px',
-                fontSize: '16px',
-                backgroundColor: '#6c757d',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer'
-              }}>
+              <button onClick={() => handleAnswer('B')} className="py-4 px-5 text-base bg-gray-500 text-white border-none rounded-lg cursor-pointer hover:bg-gray-600 transition-colors">
                 Tenho vaga ideia
               </button>
-              <button onClick={() => handleAnswer('C')} style={{
-                padding: '15px 20px',
-                fontSize: '16px',
-                backgroundColor: '#ffc107',
-                color: 'black',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer'
-              }}>
+              <button onClick={() => handleAnswer('C')} className="py-4 px-5 text-base bg-yellow-400 text-black border-none rounded-lg cursor-pointer hover:bg-yellow-500 transition-colors">
                 Reconheço mas nunca usei
               </button>
-              <button onClick={() => handleAnswer('D')} style={{
-                padding: '15px 20px',
-                fontSize: '16px',
-                backgroundColor: '#28a745',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer'
-              }}>
+              <button onClick={() => handleAnswer('D')} className="py-4 px-5 text-base bg-green-500 text-white border-none rounded-lg cursor-pointer hover:bg-green-600 transition-colors">
                 Conheço e sei empregar
               </button>
             </div>
 
-            <p style={{
-              marginTop: '30px',
-              fontSize: '14px',
-              color: '#6c757d',
-              textAlign: 'center'
-            }}>
+            <p className="mt-8 text-sm text-gray-500 text-center">
               Use as teclas 1, 2, 3, 4 para escolher rapidamente entre as opções.
             </p>
             
-            <p style={{
-              marginTop: '20px',
-              fontSize: '12px',
-              textAlign: 'center'
-            }}>
+            <p className="mt-5 text-xs text-center">
               <button 
                 onClick={() => {
                   if (window.confirm('Deseja pular para o Teste Avançado? Isso encerrará o teste atual e o direcionará para a análise estatística mais ampla.')) {
                     navigateTo('/advanced');
                   }
                 }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#007bff',
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                  textDecoration: 'underline'
-                }}
+                className="bg-transparent border-none text-blue-500 cursor-pointer text-xs underline hover:text-blue-600"
               >
                 Pular para o teste avançado, ignorando a avaliação inicial.
               </button>
@@ -435,48 +311,23 @@ function App() {
         )}
 
         {isFinished && (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '100vh',
-            padding: '40px 20px',
-            textAlign: 'center'
-          }}>
+          <div className="flex flex-col items-center justify-center min-h-screen py-10 px-5 text-center">
             {finalLevel !== null && (
               <div>
-                <h3 style={{
-                  fontSize: window.innerWidth < 768 ? '20px' : '24px',
-                  fontWeight: '600',
-                  color: '#495057',
-                  marginBottom: '20px'
-                }}>{levelLabels[finalLevel - 1]}</h3>
+                <h3 className="text-xl md:text-2xl font-semibold text-gray-700 mb-5">{levelLabels[finalLevel - 1]}</h3>
                 
                 {/* Custom messages for different levels and phases */}
                 {finalLevel === 1 && phase === 1 && (
-                  <div style={{ 
-                    textAlign: 'center', 
-                    maxWidth: '700px',
-                    margin: '0 auto',
-                    fontSize: window.innerWidth < 768 ? '16px' : '18px',
-                    lineHeight: '1.6'
-                  }}>
-                    <p style={{ margin: '0', color: '#495057' }}>
+                  <div className="text-center max-w-3xl mx-auto text-base md:text-lg leading-relaxed">
+                    <p className="m-0 text-gray-700">
                       Repertório léxico severamente limitado em palavras do cotidiano, em geral, contendo menos de 300 palavras.
                     </p>
                   </div>
                 )}
 
                 {finalLevel === 1 && phase === 2 && (
-                  <div style={{ 
-                    textAlign: 'center', 
-                    maxWidth: '700px',
-                    margin: '0 auto',
-                    fontSize: window.innerWidth < 768 ? '16px' : '18px',
-                    lineHeight: '1.6'
-                  }}>
-                    <p style={{ margin: '0', color: '#495057' }}>
+                  <div className="text-center max-w-3xl mx-auto text-base md:text-lg leading-relaxed">
+                    <p className="m-0 text-gray-700">
                       Repertório léxico limitado com conhecimentos insuficientes para progredir para uma amostragem mais ampla, 
                       a comunicação é lacônica, fracionada, são vocabulários que se estendem de poucas centenas até pouco mais de 2 mil palavras.
                     </p>
@@ -484,14 +335,8 @@ function App() {
                 )}
 
                 {finalLevel === 2 && phase === 1 && (
-                  <div style={{ 
-                    textAlign: 'center', 
-                    maxWidth: '700px',
-                    margin: '0 auto',
-                    fontSize: window.innerWidth < 768 ? '16px' : '18px',
-                    lineHeight: '1.6'
-                  }}>
-                    <p style={{ margin: '0', color: '#495057' }}>
+                  <div className="text-center max-w-3xl mx-auto text-base md:text-lg leading-relaxed">
+                    <p className="m-0 text-gray-700">
                       Repertório léxico na transição do básico ao intermediário, o testante é capaz de interpretar contextos e 
                       rapidamente compreender o tema central, mas ainda requer suporte recorrente do dicionário, são vocabulários 
                       que se estendem além de 2 mil até poucos milhares de palavras.
@@ -500,14 +345,8 @@ function App() {
                 )}
 
                 {finalLevel === 2 && phase === 2 && (
-                  <div style={{ 
-                    textAlign: 'center', 
-                    maxWidth: '700px',
-                    margin: '0 auto',
-                    fontSize: window.innerWidth < 768 ? '16px' : '18px',
-                    lineHeight: '1.6'
-                  }}>
-                    <p style={{ margin: '0', color: '#495057' }}>
+                  <div className="text-center max-w-3xl mx-auto text-base md:text-lg leading-relaxed">
+                    <p className="m-0 text-gray-700">
                       Repertório léxico intermediário, o testante é capaz de interpretar contextos diversos, incluindo palavras do cotidiano, 
                       jargões pontuais, dispensa o suporte de dicionário em leituras cursórias, são vocabulários diversos acima de 5 mil palavras 
                       até um teto de 10 a 15 mil palavras, dependendo do enfoque e jargões técnicos.
@@ -517,26 +356,15 @@ function App() {
 
                 {finalLevel === 3 && (
                   <div>
-                    <h1 style={{
-                      fontSize: window.innerWidth < 768 ? '32px' : '48px',
-                      fontWeight: 'bold',
-                      color: '#2d3436',
-                      marginBottom: '40px'
-                    }}>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')} palavras</h1>
-                    <div style={{ 
-                      textAlign: 'left', 
-                      maxWidth: '600px',
-                      margin: '0 auto',
-                      fontSize: window.innerWidth < 768 ? '16px' : '18px',
-                      lineHeight: '1.6'
-                    }}>
+                    <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-10">{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')} palavras</h1>
+                    <div className="text-left max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
                       {/* Vocabulário passivo */}
-                      <p style={{ marginBottom: '20px' }}>
+                      <p className="mb-5">
                         Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, passiveScore)).toLocaleString('pt-BR')}</strong> no vocabulário passivo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, passiveScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
                       </p>
 
                       {/* Vocabulário ativo */}
-                      <p style={{ marginBottom: '0' }}>
+                      <p className="mb-0">
                         Cerca de <strong>{Math.round(calculateVocabularyEstimate(finalLevel, activeScore)).toLocaleString('pt-BR')}</strong> no vocabulário ativo, intervalo de <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).lowerBound).toLocaleString('pt-BR')}</strong> a <strong>{Math.round(calculateConfidenceInterval(finalLevel, activeScore).upperBound).toLocaleString('pt-BR')}</strong> palavras.
                       </p>
                     </div>
@@ -547,17 +375,10 @@ function App() {
           </div>
         )}
 
-        <footer style={{ 
-          marginTop: 'auto', 
-          padding: '20px', 
-          textAlign: 'center', 
-          borderTop: '1px solid #dee2e6',
-          fontSize: '14px',
-          color: '#6c757d'
-        }}>
+        <footer className="mt-auto p-5 text-center border-t border-gray-200 text-sm text-gray-500">
           Código-fonte disponível em
-          <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer" style={{ marginLeft: '5px', color: '#007bff' }}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+          <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer" className="ml-1 text-blue-500 hover:text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" className="inline">
               <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.207 11.387.6.112.793-.262.793-.583 0-.288-.01-1.05-.015-2.06-3.338.727-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.09-.746.083-.73.083-.73 1.204.084 1.837 1.237 1.837 1.237 1.07 1.834 2.809 1.305 3.495.997.108-.774.418-1.305.76-1.605-2.666-.305-5.467-1.333-5.467-5.93 0-1.31.47-2.38 1.237-3.22-.125-.304-.537-1.527.117-3.176 0 0 1.01-.324 3.3 1.23a11.48 11.48 0 0 1 3.006-.404 11.5 11.5 0 0 1 3.006.404c2.29-1.554 3.3-1.23 3.3-1.23.655 1.65.243 2.873.118 3.176.77.84 1.237 1.91 1.237 3.22 0 4.61-2.803 5.624-5.474 5.922.43.372.81 1.102.81 2.222 0 1.606-.014 2.898-.014 3.293 0 .324.193.698.8.58C20.565 21.797 24 17.298 24 12 24 5.37 18.63 0 12 0z"/>
             </svg> Cássio Pagnoncelli
           </a>
@@ -570,135 +391,44 @@ function App() {
   return (
     <div>
       {/* Header */}
-      <div style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        padding: window.innerWidth < 768 ? '40px 20px' : '60px 40px',
-        textAlign: 'center',
-        color: 'white'
-      }}>
-        <h1 style={{ 
-          fontSize: window.innerWidth < 768 ? '28px' : '42px',
-          fontWeight: '800',
-          margin: '0 0 15px 0',
-          textShadow: '0 2px 4px rgba(0,0,0,0.3)',
-          color: 'white'
-        }}>📚 Teste de Vocabulário</h1>
-        <p style={{
-          fontSize: window.innerWidth < 768 ? '16px' : '20px',
-          margin: '0',
-          opacity: '0.95',
-          fontWeight: '300',
-          color: 'white'
-        }}>Descubra o tamanho do seu vocabulário em português</p>
+      <div className="bg-gradient-to-br from-indigo-500 to-purple-600 py-10 px-5 md:py-15 md:px-10 text-center text-white">
+        <h1 className="text-3xl md:text-5xl font-extrabold mb-4 drop-shadow-lg text-white">📚 Teste de Vocabulário</h1>
+        <p className="text-base md:text-xl m-0 opacity-95 font-light text-white">Descubra o tamanho do seu vocabulário em português</p>
       </div>
 
       {/* Main Content */}
-      <div style={{
-        padding: window.innerWidth < 768 ? '40px 20px' : '60px 40px',
-        maxWidth: '800px',
-        margin: '0 auto',
-        textAlign: 'center'
-      }}>
-        <h2 style={{
-          fontSize: window.innerWidth < 768 ? '24px' : '32px',
-          fontWeight: '700',
-          color: '#2d3436',
-          marginBottom: window.innerWidth < 768 ? '30px' : '40px'
-        }}>Escolha seu teste</h2>
+      <div className="py-10 px-5 md:py-15 md:px-10 max-w-4xl mx-auto text-center">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 md:mb-10">Escolha seu teste</h2>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr',
-          gap: window.innerWidth < 768 ? '20px' : '30px',
-          marginBottom: window.innerWidth < 768 ? '40px' : '50px'
-        }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mb-10 md:mb-12">
           {/* Assessment Test */}
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '16px',
-            padding: window.innerWidth < 768 ? '25px' : '35px',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-            border: '1px solid #e9ecef',
-            cursor: 'pointer'
-          }} onClick={() => navigateTo('/assessment')}>
-            <h3 style={{
-              fontSize: window.innerWidth < 768 ? '20px' : '24px',
-              fontWeight: '700',
-              color: '#2d3436',
-              marginBottom: '15px'
-            }}>🎯 Teste Adaptativo</h3>
-            <p style={{
-              fontSize: window.innerWidth < 768 ? '14px' : '16px',
-              color: '#6c757d',
-              lineHeight: '1.5',
-              marginBottom: '20px'
-            }}>
+          <div className="bg-white rounded-2xl p-6 md:p-9 shadow-xl border border-gray-200 cursor-pointer hover:shadow-2xl transition-shadow" onClick={() => navigateTo('/assessment')}>
+            <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">🎯 Teste Adaptativo</h3>
+            <p className="text-sm md:text-base text-gray-500 leading-relaxed mb-5">
               Teste inteligente que se adapta ao seu nível. Determina automaticamente se você é básico, intermediário ou fluente.
             </p>
-            <button style={{
-              backgroundColor: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '12px 24px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}>
+            <button className="bg-blue-500 text-white border-none rounded-lg py-3 px-6 text-base font-semibold cursor-pointer hover:bg-blue-600 transition-colors">
               Iniciar Teste
             </button>
           </div>
 
           {/* Repertoire Test */}
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '16px',
-            padding: window.innerWidth < 768 ? '25px' : '35px',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-            border: '1px solid #e9ecef',
-            cursor: 'pointer'
-          }} onClick={() => navigateTo('/advanced')}>
-            <h3 style={{
-              fontSize: window.innerWidth < 768 ? '20px' : '24px',
-              fontWeight: '700',
-              color: '#2d3436',
-              marginBottom: '15px'
-            }}>📊 Teste Avançado</h3>
-            <p style={{
-              fontSize: window.innerWidth < 768 ? '14px' : '16px',
-              color: '#6c757d',
-              lineHeight: '1.5',
-              marginBottom: '20px'
-            }}>
+          <div className="bg-white rounded-2xl p-6 md:p-9 shadow-xl border border-gray-200 cursor-pointer hover:shadow-2xl transition-shadow" onClick={() => navigateTo('/advanced')}>
+            <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">📊 Teste Avançado</h3>
+            <p className="text-sm md:text-base text-gray-500 leading-relaxed mb-5">
               Análise estatística completa. Fornece estimativa científica do seu vocabulário total com intervalos de confiança.
             </p>
-            <button style={{
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '12px 24px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}>
+            <button className="bg-green-500 text-white border-none rounded-lg py-3 px-6 text-base font-semibold cursor-pointer hover:bg-green-600 transition-colors">
               Iniciar Análise
             </button>
           </div>
         </div>
       </div>
 
-      <footer style={{ 
-        marginTop: 'auto', 
-        padding: '20px', 
-        textAlign: 'center', 
-        borderTop: '1px solid #dee2e6',
-        fontSize: '14px',
-        color: '#6c757d'
-      }}>
+      <footer className="mt-auto p-5 text-center border-t border-gray-200 text-sm text-gray-500">
         Código-fonte disponível em
-        <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer" style={{ marginLeft: '5px', color: '#007bff' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+        <a href="https://github.com/cassiopagnoncelli/dicio" target="_blank" rel="noopener noreferrer" className="ml-1 text-blue-500 hover:text-blue-600">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" className="inline">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.207 11.387.6.112.793-.262.793-.583 0-.288-.01-1.05-.015-2.06-3.338.727-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.09-.746.083-.73.083-.73 1.204.084 1.837 1.237 1.837 1.237 1.07 1.834 2.809 1.305 3.495.997.108-.774.418-1.305.76-1.605-2.666-.305-5.467-1.333-5.467-5.93 0-1.31.47-2.38 1.237-3.22-.125-.304-.537-1.527.117-3.176 0 0 1.01-.324 3.3 1.23a11.48 11.48 0 0 1 3.006-.404 11.5 11.5 0 0 1 3.006.404c2.29-1.554 3.3-1.23 3.3-1.23.655 1.65.243 2.873.118 3.176.77.84 1.237 1.91 1.237 3.22 0 4.61-2.803 5.624-5.474 5.922.43.372.81 1.102.81 2.222 0 1.606-.014 2.898-.014 3.293 0 .324.193.698.8.58C20.565 21.797 24 17.298 24 12 24 5.37 18.63 0 12 0z"/>
           </svg> Cássio Pagnoncelli
         </a>
