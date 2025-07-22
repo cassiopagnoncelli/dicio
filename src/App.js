@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css'; // Import the CSS file
 import dict from './words';
-import Repertoire from './Repertoire';
+import Advanced from './Advanced';
 
 // Fisher-Yates Shuffle
 function shuffleArray(array) {
@@ -216,7 +216,7 @@ function App() {
 
   // Render different components based on route
   if (currentRoute === '/advanced') {
-    return <Repertoire />;
+    return <Advanced />;
   }
 
   // Redirect root to assessment

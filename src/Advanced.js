@@ -16,7 +16,7 @@ function parseDictionary(dictContent) {
   return dictContent.split('\n').filter(word => word.trim() !== '');
 }
 
-function Repertoire() {
+function Advanced() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [activeScore, setActiveScore] = useState(0); // K_2
   const [passiveScore, setPassiveScore] = useState(0); // K_1
@@ -27,11 +27,12 @@ function Repertoire() {
 
   // Error margin configurations
   const ERROR_MARGIN_CONFIGS = {
+    50: { words: 5, margin: 5 },
     5: { words: 289, margin: 5 },
     7: { words: 147, margin: 7 }
   };
   
-  const DEFAULT_ERROR_MARGIN = 7; // Default to 7% error margin
+  const DEFAULT_ERROR_MARGIN = 50; // Default to 7% error margin
   const config = ERROR_MARGIN_CONFIGS[DEFAULT_ERROR_MARGIN];
   const N = config.words; // Number of words to test
   const ERROR_MARGIN = config.margin; // Error margin percentage
@@ -482,7 +483,7 @@ function Repertoire() {
                         }}>🟡 Vocabulário Passivo</h3>
                         <div style={{ fontSize: window.innerWidth < 768 ? '16px' : '18px', lineHeight: '1.6' }}>
                           <p style={{ margin: '12px 0' }}><strong>Estimativa:</strong> {passiveStats.estimate.toLocaleString('pt-BR')} palavras</p>
-                          <p style={{ margin: '12px 0' }}><strong>Intervalo (95%):</strong> {passiveStats.lower_bound.toLocaleString('pt-BR')} — {passiveStats.upper_bound.toLocaleString('pt-BR')} palavras</p>
+                          <p style={{ margin: '12px 0' }}><strong>Intervalo de confiança:</strong> {passiveStats.lower_bound.toLocaleString('pt-BR')} — {passiveStats.upper_bound.toLocaleString('pt-BR')} palavras</p>
                         </div>
                       </div>
 
@@ -496,7 +497,7 @@ function Repertoire() {
                         }}>🟢 Vocabulário Ativo</h3>
                         <div style={{ fontSize: window.innerWidth < 768 ? '16px' : '18px', lineHeight: '1.6' }}>
                           <p style={{ margin: '12px 0' }}><strong>Estimativa:</strong> {activeStats.estimate.toLocaleString('pt-BR')} palavras</p>
-                          <p style={{ margin: '12px 0' }}><strong>Intervalo (95%):</strong> {activeStats.lower_bound.toLocaleString('pt-BR')} — {activeStats.upper_bound.toLocaleString('pt-BR')} palavras</p>
+                          <p style={{ margin: '12px 0' }}><strong>Intervalo de confiança:</strong> {activeStats.lower_bound.toLocaleString('pt-BR')} — {activeStats.upper_bound.toLocaleString('pt-BR')} palavras</p>
                         </div>
                       </div>
 
@@ -568,4 +569,4 @@ function Repertoire() {
   );
 }
 
-export default Repertoire;
+export default Advanced;
