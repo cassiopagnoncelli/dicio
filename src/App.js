@@ -284,7 +284,7 @@ function App() {
                 Tenho vaga ideia
               </button>
               <button onClick={() => handleAnswer('C')} className="py-4 px-5 text-base bg-yellow-400 text-black border-none rounded-lg cursor-pointer hover:bg-yellow-500 transition-colors">
-                Reconheço mas nunca usei
+                Nunca usei, mas entendo o significado
               </button>
               <button onClick={() => handleAnswer('D')} className="py-4 px-5 text-base bg-green-500 text-white border-none rounded-lg cursor-pointer hover:bg-green-600 transition-colors">
                 Conheço e sei empregar
